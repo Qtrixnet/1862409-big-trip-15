@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
-* Студент: [Кирилл](https://up.htmlacademy.ru/ecmascript/15/user/1862409).
-* Наставник: `Неизвестно`.
+* Студент: [Кирилл Шашичев](https://up.htmlacademy.ru/ecmascript/15/user/1862409).
+* Наставник: [Roman Lauryniuk](https://github.com/svoboda-rabstvo).
 
 ---
 

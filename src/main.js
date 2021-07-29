@@ -2,7 +2,8 @@ import { createNavigationTemplate } from './view/site-menu';
 import { createTripInfoTemplate } from './view/trip-info';
 import { createFiltersTemplate } from './view/filters';
 import { createSortTemplate } from './view/sort';
-import { createContentTemplate } from './view/content';
+import { createEventsListTemplate } from './view/trip-events-list';
+import { createEventsItemTemplate } from './view/trip-events-item';
 
 //* Функция рендера блоков
 const render = (container, template, place) => {
@@ -29,4 +30,13 @@ const mainPageElement = document.querySelector('.page-body__page-main'),
   tripEventsElement = mainPageElement.querySelector('.trip-events');
 
 render(tripEventsElement, createSortTemplate(), 'beforeEnd')
-render(tripEventsElement, createContentTemplate(), 'beforeEnd')
+
+//* Контент (путешествия)
+render(tripEventsElement, createEventsListTemplate(), 'beforeEnd')
+
+const tripEventsList = tripEventsElement.querySelector('.trip-events__list')
+
+//* 5 тестовых компонентов поездок, для наглядности
+for (let i = 0; i < 5; i++) {
+  render(tripEventsList, createEventsItemTemplate(), 'beforeEnd')
+}

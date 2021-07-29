@@ -4,6 +4,8 @@ import { createFiltersTemplate } from './view/filters';
 import { createSortTemplate } from './view/sort';
 import { createEventsListTemplate } from './view/trip-events-list';
 import { createEventsItemTemplate } from './view/trip-events-item';
+import { createLoadingsTemplate } from './view/loading';
+import { createTripCostTemplate } from './view/trip-cost';
 
 //* Функция рендера блоков
 const render = (container, template, place) => {
@@ -18,8 +20,11 @@ const headerElement = document.querySelector('.page-header'),
 render(navigationElement, createNavigationTemplate(), 'beforeEnd')
 
 const tripMainElement = headerElement.querySelector('.trip-main')
-//* Информация о путешествии (Маршрут и стоимость)
+//* Информация о путешествии (Маршрут и города)
 render(tripMainElement, createTripInfoTemplate(), 'afterbegin')
+//* Информация о путешествии (Стоимость)
+const tripInfoElement = tripMainElement.querySelector('.trip-main__trip-info')
+render(tripInfoElement, createTripCostTemplate(), 'beforeEnd')
 
 //* Фильтры
 const filtersElement = tripMainElement.querySelector('.trip-controls__filters');
@@ -36,7 +41,7 @@ render(tripEventsElement, createEventsListTemplate(), 'beforeEnd')
 
 const tripEventsList = tripEventsElement.querySelector('.trip-events__list')
 
-//* 5 тестовых компонентов поездок, для наглядности
-for (let i = 0; i < 5; i++) {
+//* 3 тестовых компонентов поездок, для наглядности
+for (let i = 0; i < 3; i++) {
   render(tripEventsList, createEventsItemTemplate(), 'beforeEnd')
 }

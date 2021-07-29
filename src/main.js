@@ -6,6 +6,7 @@ import { createEventsListTemplate } from './view/trip-events-list';
 import { createEventsItemTemplate } from './view/trip-events-item';
 import { createLoadingsTemplate } from './view/loading';
 import { createTripCostTemplate } from './view/trip-cost';
+import { createEventEditFormTemplate } from './view/event-edit-form';
 
 //* Функция рендера блоков
 const render = (container, template, place) => {
@@ -41,7 +42,14 @@ render(tripEventsElement, createEventsListTemplate(), 'beforeEnd')
 
 const tripEventsList = tripEventsElement.querySelector('.trip-events__list')
 
-//* 3 тестовых компонентов поездок, для наглядности
+//* 3 тестовых компонентов поездок
+//! Для наглядности
 for (let i = 0; i < 3; i++) {
-  render(tripEventsList, createEventsItemTemplate(), 'beforeEnd')
+  if (i < 1) {
+    //* Отрисовываем первый элемент списка (форму)
+    render(tripEventsList, createEventEditFormTemplate(), 'beforeEnd')
+  } else {
+    //* Отрисовываем остальные элементы
+    render(tripEventsList, createEventsItemTemplate(), 'beforeEnd')
+  }
 }

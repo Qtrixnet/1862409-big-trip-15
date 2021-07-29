@@ -4,9 +4,10 @@ import { createFiltersTemplate } from './view/filters';
 import { createSortTemplate } from './view/sort';
 import { createEventsListTemplate } from './view/trip-events-list';
 import { createEventsItemTemplate } from './view/trip-events-item';
-import { createLoadingsTemplate } from './view/loading';
 import { createTripCostTemplate } from './view/trip-cost';
 import { createEventEditFormTemplate } from './view/event-edit-form';
+import { createLoadingTemplate } from './view/loading';
+import { createEventCreateFormTemplate } from './view/event-create-form';
 
 //* Функция рендера блоков
 const render = (container, template, place) => {

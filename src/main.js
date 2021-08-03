@@ -6,6 +6,8 @@ import { createEventsListTemplate } from './view/trip-events-list';
 import { createEventsItemTemplate } from './view/trip-events-item';
 import { createTripCostTemplate } from './view/trip-cost';
 import { createEventEditFormTemplate } from './view/event-edit-form';
+import { generateWayPoint } from './mock/wayPoint'
+
 
 //* Функция рендера блоков
 const render = (container, template, place) => {
@@ -45,16 +47,18 @@ render(tripEventsElement, createEventsListTemplate(), 'beforeEnd');
 
 const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
 
-const ELEMS__COUNT = 3;
+const ELEMS__COUNT = 20;
+
+const wayPoints = new Array(ELEMS__COUNT).fill().map(generateWayPoint)
 
 //* 3 тестовых компонентов поездок
 //! Для наглядности
 for (let i = 0; i < ELEMS__COUNT; i++) {
   if (i < 1) {
     //* Отрисовываем первый элемент списка (форму)
-    render(tripEventsList, createEventEditFormTemplate(), 'beforeEnd');
+    render(tripEventsList, createEventEditFormTemplate(generateWayPoint()), 'beforeEnd');
   } else {
     //* Отрисовываем остальные элементы
-    render(tripEventsList, createEventsItemTemplate(), 'beforeEnd');
+    render(tripEventsList, createEventsItemTemplate(generateWayPoint(wayPoints[i])), 'beforeEnd');
   }
 }

@@ -6,13 +6,19 @@ import { createEventsListTemplate } from './view/trip-events-list';
 import { createEventsItemTemplate } from './view/trip-events-item';
 import { createTripCostTemplate } from './view/trip-cost';
 import { createEventEditFormTemplate } from './view/event-edit-form';
-import { generateWayPoint } from './mock/wayPoint'
+// import { createEventCreateFormTemplate } from './view/event-create-form';
+import { generateWayPoint } from './mock/wayPoint';
+import { generateHeaderInfo } from './mock/headerInfo';
 
 
 //* Функция рендера блоков
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
+
+//* 20 тестовых компонентов поездок
+const ELEMS__COUNT = 20;
+const wayPoints = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
 
 //* Хедер
 //* Меню навигации
@@ -24,12 +30,12 @@ render(navigationElement, createNavigationTemplate(), 'beforeEnd');
 const tripMainElement = headerElement.querySelector('.trip-main');
 
 //* Информация о путешествии (Маршрут и города)
-render(tripMainElement, createTripInfoTemplate(), 'afterbegin');
+render(tripMainElement, createTripInfoTemplate(generateHeaderInfo(wayPoints)), 'afterbegin');
 
 //* Информация о путешествии (Стоимость)
 const tripInfoElement = tripMainElement.querySelector('.trip-main__trip-info');
 
-render(tripInfoElement, createTripCostTemplate(), 'beforeEnd');
+render(tripInfoElement, createTripCostTemplate(generateHeaderInfo(wayPoints)), 'beforeEnd');
 
 //* Фильтры
 const filtersElement = tripMainElement.querySelector('.trip-controls__filters');
@@ -47,18 +53,15 @@ render(tripEventsElement, createEventsListTemplate(), 'beforeEnd');
 
 const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
 
-const ELEMS__COUNT = 20;
 
-const wayPoints = new Array(ELEMS__COUNT).fill().map(generateWayPoint)
+//* Форма создания точки маршрута
+// render(tripEventsList, createEventCreateFormTemplate(wayPoints[0]), 'beforeEnd');
 
-//* 3 тестовых компонентов поездок
-//! Для наглядности
-for (let i = 0; i < ELEMS__COUNT; i++) {
-  if (i < 1) {
-    //* Отрисовываем первый элемент списка (форму)
-    render(tripEventsList, createEventEditFormTemplate(generateWayPoint()), 'beforeEnd');
-  } else {
-    //* Отрисовываем остальные элементы
-    render(tripEventsList, createEventsItemTemplate(generateWayPoint(wayPoints[i])), 'beforeEnd');
-  }
+//* Отрисовываем первый элемент списка (форму редактирования)
+render(tripEventsList, createEventEditFormTemplate(wayPoints[0]), 'beforeEnd');
+
+for (let i = 1; i < ELEMS__COUNT; i++) {
+  //* Отрисовываем остальные элементы
+  render(tripEventsList, createEventsItemTemplate(wayPoints[i]), 'beforeEnd');
 }
+

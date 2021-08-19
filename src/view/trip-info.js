@@ -1,4 +1,6 @@
-export const createTripInfoTemplate = ({ dateFrom, dateTo, citiesList }) => {
+import { createElement } from '../utils';
+
+const createTripInfoTemplate = ({ dateFrom, dateTo, citiesList }) => {
 
   const handleCities = (cities) => {
     //* Убираем из маршрута повторяющиеся подряд города и объединяем в строку с разделителем
@@ -21,3 +23,25 @@ export const createTripInfoTemplate = ({ dateFrom, dateTo, citiesList }) => {
     </div>
   </section>`;
 };
+
+export default class TripInfo {
+  constructor(headerInfo) {
+    this._element = null;
+    this._headerInfo = headerInfo;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._headerInfo);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

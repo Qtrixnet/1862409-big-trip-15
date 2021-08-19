@@ -1,6 +1,18 @@
-export const createEventsItemTemplate = ({offers, tripDate, isFavorite, type, city, startTimeMini, endTimeMini, duration, price}) =>  {
+import { createElement } from '../utils';
+
+const createEventsItemTemplate = ({
+  offers,
+  tripDate,
+  isFavorite,
+  type,
+  city,
+  minifiedTimeFrom,
+  minifiedTimeTo,
+  duration,
+  price,
+}) => {
   let offersMarkup = '';
-  for(const offer of offers) {
+  for (const offer of offers) {
     offersMarkup += `
       <li class="event__offer">
         <span class="event__offer-title">${offer.title}</span>
@@ -22,9 +34,9 @@ export const createEventsItemTemplate = ({offers, tripDate, isFavorite, type, ci
       <h3 class="event__title">${type} ${city}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T10:30">${startTimeMini}</time>
+          <time class="event__start-time" datetime="2019-03-18T10:30">${minifiedTimeFrom}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T11:00">${endTimeMini}</time>
+          <time class="event__end-time" datetime="2019-03-18T11:00">${minifiedTimeTo}</time>
         </p>
         <p class="event__duration">${duration}</p>
       </div>
@@ -48,3 +60,24 @@ export const createEventsItemTemplate = ({offers, tripDate, isFavorite, type, ci
   </li>`;
 };
 
+export default class TripEventsItem {
+  constructor(waypoint) {
+    this._element = null;
+    this._waypoint = waypoint;
+  }
+
+  getTemplate() {
+    return createEventsItemTemplate(this._waypoint);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

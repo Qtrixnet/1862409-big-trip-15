@@ -5,13 +5,13 @@ const createTripCostTemplate = ({ totalCost }) => `<p class="trip-info__cost">
   </p>`;
 
 export default class TripCost {
-  constructor(totalCost) {
+  constructor(headerInfo) {
     this._element = null;
-    this._totalCost = totalCost;
+    this._headerInfo = headerInfo;
   }
 
   getTemplate() {
-    return createTripCostTemplate(this._totalCost);
+    return createTripCostTemplate(this._headerInfo);
   }
 
   getElement() {

@@ -1,14 +1,14 @@
 import { createElement } from '../utils';
 
-const createLoadingTemplate = () => '<p class="trip-events__msg">Loading...</p>';
+const createNoEventTemplate = () => '<p class="trip-events__msg">Click New Event to create your first point</p>';
 
-export default class Loading {
-  constructor() {
+export default class NoEvent {
+  constructor(){
     this._element = null;
   }
 
   getTemplate() {
-    return createLoadingTemplate();
+    return createNoEventTemplate();
   }
 
   getElement() {

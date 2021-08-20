@@ -1,11 +1,12 @@
 import { getOffersMarkup, getWayPointsListMarkup, getDestinationListMarkup } from '../utils';
+import { createElement } from '../utils';
 
-export const createEventEditFormTemplate = ({
+const createEventEditFormTemplate = ({
   wayPointsList,
   type,
   citiesList,
   fullTimeFrom,
-  endTimeFull,
+  fullTimeTo,
   price,
   offers,
   desription,
@@ -41,7 +42,7 @@ export const createEventEditFormTemplate = ({
           <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fullTimeFrom}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTimeFull}">
+          <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${fullTimeTo}">
         </div>
         <div class="event__field-group event__field-group--price">
           <label class="event__label" for="event-price-1">
@@ -72,3 +73,25 @@ export const createEventEditFormTemplate = ({
     </form>
   </li>`;
 };
+
+export default class EventEditForm {
+  constructor(wayPoint) {
+    this._element = null;
+    this._wayPoint = wayPoint;
+  }
+
+  getTemplate() {
+    return createEventEditFormTemplate(this._wayPoint);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

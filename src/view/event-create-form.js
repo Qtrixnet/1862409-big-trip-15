@@ -1,6 +1,7 @@
 import { getOffersMarkup, getWayPointsListMarkup, getDestinationListMarkup} from '../utils';
+import { createElement } from '../utils';
 
-export const createEventCreateFormTemplate = ({
+const createEventCreateFormTemplate = ({
   offers,
   type,
   citiesList,
@@ -81,3 +82,25 @@ export const createEventCreateFormTemplate = ({
   </form>
 </li>`;
 };
+
+export default class EventCreateForm {
+  constructor(wayPoint) {
+    this._element = null;
+    this._wayPoint = wayPoint;
+  }
+
+  getTemplate() {
+    return createEventCreateFormTemplate(this._wayPoint);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

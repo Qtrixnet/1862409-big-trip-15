@@ -37,7 +37,6 @@ const mainPageElement = document.querySelector('.page-body__page-main'),
 //* Контент (путешествия)
 render(tripEventsElement, new TripEventsListView().getElement(), RenderPosition.BEFOREEND);
 
-
 //* Форма создания точки маршрута
 // render(tripEventsList, new EventCreateFormView(wayPoints[0]).getElement(), RenderPosition.BEFOREEND);
 
@@ -96,5 +95,4 @@ if(ELEMS__COUNT === 0) {
     //* Отрисовываем точку маршрута
     renderEventItem(tripEventsList, wayPoints[i]);
   }
-
 }

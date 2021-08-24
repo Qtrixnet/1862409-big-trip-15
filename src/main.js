@@ -11,7 +11,7 @@ import NoEventView from './view/no-event';
 
 import { generateWayPoint } from './mock/wayPoint';
 import { generateHeaderInfo } from './mock/headerInfo';
-import { render, RenderPosition } from './utils';
+import { render, RenderPosition, replace } from './utils/render';
 
 //* 20 тестовых компонентов поездок
 const ELEMS__COUNT = 20;
@@ -37,8 +37,6 @@ const mainPageElement = document.querySelector('.page-body__page-main'),
 //* Контент (путешествия)
 render(tripEventsElement, new TripEventsListView().getElement(), RenderPosition.BEFOREEND);
 
-//* Форма создания точки маршрута
-// render(tripEventsList, new EventCreateFormView(wayPoints[0]).getElement(), RenderPosition.BEFOREEND);
 
 if(ELEMS__COUNT === 0) {
   render(tripEventsElement, new NoEventView().getElement(), RenderPosition.BEFOREEND);
@@ -50,6 +48,8 @@ if(ELEMS__COUNT === 0) {
   render(tripInfoElement, new TripCostView(generateHeaderInfo(wayPoints)).getElement(), RenderPosition.BEFOREEND);
   const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
   render(tripEventsElement, new SortView().getElement(), RenderPosition.AFTERBEGIN);
+  //* Форма создания точки маршрута
+  // render(tripEventsList, new EventCreateFormView(wayPoints[0]).getElement(), RenderPosition.BEFOREEND);
   const renderEventItem = (tripEventsListContainer, wayPoint) => {
 
     //* Создаем экземпляры классов точки маршрута и формы редактирвоания
@@ -58,10 +58,10 @@ if(ELEMS__COUNT === 0) {
 
     //* Создаем функции замены DOM элементов
     const replaceItemToFrom = () => {
-      tripEventsListContainer.replaceChild(eventEditFormComponent.getElement(), eventItemComponent.getElement());
+      replace(eventEditFormComponent, eventItemComponent);
     };
     const replaceFormToItem = () => {
-      tripEventsListContainer.replaceChild(eventItemComponent.getElement(), eventEditFormComponent.getElement());
+      replace(eventItemComponent, eventEditFormComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -73,22 +73,20 @@ if(ELEMS__COUNT === 0) {
     };
 
     //* Навешиваем обработчики на кнопки
-    eventItemComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    eventItemComponent.setEditClickHandler(() => {
       replaceItemToFrom();
       document.addEventListener('keydown', onEscKeyDown);
     });
-    eventEditFormComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    eventEditFormComponent.setFormSubmitHandler(() => {
       replaceFormToItem();
       document.removeEventListener('keydown', onEscKeyDown);
     });
-    eventEditFormComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
+    eventEditFormComponent.setFormCloseHandler(() => {
       replaceFormToItem();
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    render(tripEventsListContainer, eventItemComponent.getElement(), RenderPosition.BEFOREEND);
+    render(tripEventsListContainer, eventItemComponent, RenderPosition.BEFOREEND);
   };
 
   for (let i = 0; i < ELEMS__COUNT; i++) {

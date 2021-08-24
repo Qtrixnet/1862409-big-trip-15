@@ -1,5 +1,5 @@
-import { getOffersMarkup, getWayPointsListMarkup, getDestinationListMarkup} from '../utils';
-import { createElement } from '../utils';
+import { getOffersMarkup, getWayPointsListMarkup, getDestinationListMarkup} from '../utils/tripPoint';
+import AbstractView from './abstract';
 
 const createEventCreateFormTemplate = ({
   offers,
@@ -83,24 +83,13 @@ const createEventCreateFormTemplate = ({
 </li>`;
 };
 
-export default class EventCreateForm {
+export default class EventCreateForm extends AbstractView {
   constructor(wayPoint) {
-    this._element = null;
+    super();
     this._wayPoint = wayPoint;
   }
 
   getTemplate() {
     return createEventCreateFormTemplate(this._wayPoint);
-  }
-
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

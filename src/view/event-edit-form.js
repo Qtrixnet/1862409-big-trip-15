@@ -1,5 +1,5 @@
-import { getOffersMarkup, getWayPointsListMarkup, getDestinationListMarkup } from '../utils';
-import { createElement } from '../utils';
+import { getOffersMarkup, getWayPointsListMarkup, getDestinationListMarkup } from '../utils/tripPoint';
+import AbstractView from './abstract';
 
 const createEventEditFormTemplate = ({
   wayPointsList,
@@ -74,24 +74,36 @@ const createEventEditFormTemplate = ({
   </li>`;
 };
 
-export default class EventEditForm {
+export default class EventEditForm extends AbstractView {
   constructor(wayPoint) {
-    this._element = null;
+    super();
     this._wayPoint = wayPoint;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseHandler = this._formCloseHandler.bind(this);
   }
 
   getTemplate() {
     return createEventEditFormTemplate(this._wayPoint);
   }
 
-  getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmitClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmitClick = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
+
+  _formCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmitClick();
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback._formCloseHandler = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formCloseHandler);
+  }
+
 }

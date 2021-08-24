@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 const createEventsItemTemplate = ({
   offers,
@@ -60,24 +60,24 @@ const createEventsItemTemplate = ({
   </li>`;
 };
 
-export default class TripEventsItem {
+export default class TripEventsItem extends AbstractView {
   constructor(waypoint) {
-    this._element = null;
+    super();
     this._waypoint = waypoint;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEventsItemTemplate(this._waypoint);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._editClickHandler);
   }
 }

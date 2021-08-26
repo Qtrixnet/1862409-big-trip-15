@@ -88,7 +88,7 @@ export default class EventEditForm extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmitClick();
+    this._callback.formSubmitClick(this._wayPoint);
   }
 
   setFormSubmitHandler(callback) {
@@ -98,11 +98,11 @@ export default class EventEditForm extends AbstractView {
 
   _formCloseHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmitClick();
+    this._callback.formSubmitClick(this._wayPoint);
   }
 
   setFormCloseHandler(callback) {
-    this._callback._formCloseHandler = callback;
+    this._callback.formSubmitClick = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formCloseHandler);
   }
 

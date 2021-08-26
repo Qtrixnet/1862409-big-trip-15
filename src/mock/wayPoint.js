@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { getRandomInteger } from '../utils/common';
 import { eventTypes, eventCitites, eventDescription } from '../const';
+import { nanoid } from 'nanoid';
 
 //* Генерация даты путешествия
 const generateDate = () => {
@@ -206,6 +207,7 @@ export const generateWayPoint = () => {
   };
 
   return {
+    id: nanoid(),
     tripDate,
     type,
     city: generateCity(),

@@ -1,23 +1,19 @@
 import SiteMenuView from './view/site-menu';
-import SortView from './view/sort';
 import TripCostView from './view/trip-cost';
 import FiltersView from './view/filters';
-import TripEventsListView from './view/trip-events-list';
 import TripInfoView from './view/trip-info';
-import TripEventsItem from './view/trip-events-item';
-import EventEditFormView from './view/event-edit-form';
-import NoEventView from './view/no-event';
-// import EventCreateFormView from './view/event-create-form';
+
+import TripPresenter from './presenter/trip';
 
 import { generateWayPoint } from './mock/wayPoint';
 import { generateHeaderInfo } from './mock/headerInfo';
-import { render, RenderPosition, replace } from './utils/render';
+import { render, RenderPosition } from './utils/render';
 
 //* 20 тестовых компонентов поездок
 const ELEMS__COUNT = 20;
 const wayPoints = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
 
-//* Хедер
+//*Хедер
 //* Меню навигации
 const headerElement = document.querySelector('.page-header'),
   navigationElement = headerElement.querySelector('.trip-controls__navigation');
@@ -30,67 +26,16 @@ const tripMainElement = headerElement.querySelector('.trip-main');
 const filtersElement = tripMainElement.querySelector('.trip-controls__filters');
 render(filtersElement, new FiltersView().getElement(), RenderPosition.BEFOREEND);
 
-//* Сортировка
+//* Информация о путешествии (Маршрут и города)
+render(tripMainElement, new TripInfoView(generateHeaderInfo(wayPoints)).getElement(), RenderPosition.AFTERBEGIN);
+//* Информация о путешествии (Стоимость)
+const tripInfoElement = tripMainElement.querySelector('.trip-main__trip-info');
+render(tripInfoElement, new TripCostView(generateHeaderInfo(wayPoints)).getElement(), RenderPosition.BEFOREEND);
+
+//*Контейнер для точек маршрута
 const mainPageElement = document.querySelector('.page-body__page-main'),
   tripEventsElement = mainPageElement.querySelector('.trip-events');
+// const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
 
-//* Контент (путешествия)
-render(tripEventsElement, new TripEventsListView().getElement(), RenderPosition.BEFOREEND);
-
-
-if(ELEMS__COUNT === 0) {
-  render(tripEventsElement, new NoEventView().getElement(), RenderPosition.BEFOREEND);
-} else {
-  //* Информация о путешествии (Маршрут и города)
-  render(tripMainElement, new TripInfoView(generateHeaderInfo(wayPoints)).getElement(), RenderPosition.AFTERBEGIN);
-  //* Информация о путешествии (Стоимость)
-  const tripInfoElement = tripMainElement.querySelector('.trip-main__trip-info');
-  render(tripInfoElement, new TripCostView(generateHeaderInfo(wayPoints)).getElement(), RenderPosition.BEFOREEND);
-  const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
-  render(tripEventsElement, new SortView().getElement(), RenderPosition.AFTERBEGIN);
-  //* Форма создания точки маршрута
-  // render(tripEventsList, new EventCreateFormView(wayPoints[0]).getElement(), RenderPosition.BEFOREEND);
-  const renderEventItem = (tripEventsListContainer, wayPoint) => {
-
-    //* Создаем экземпляры классов точки маршрута и формы редактирвоания
-    const eventItemComponent = new TripEventsItem(wayPoint);
-    const eventEditFormComponent = new EventEditFormView(wayPoint);
-
-    //* Создаем функции замены DOM элементов
-    const replaceItemToFrom = () => {
-      replace(eventEditFormComponent, eventItemComponent);
-    };
-    const replaceFormToItem = () => {
-      replace(eventItemComponent, eventEditFormComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToItem();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    //* Навешиваем обработчики на кнопки
-    eventItemComponent.setEditClickHandler(() => {
-      replaceItemToFrom();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-    eventEditFormComponent.setFormSubmitHandler(() => {
-      replaceFormToItem();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-    eventEditFormComponent.setFormCloseHandler(() => {
-      replaceFormToItem();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    render(tripEventsListContainer, eventItemComponent, RenderPosition.BEFOREEND);
-  };
-
-  for (let i = 0; i < ELEMS__COUNT; i++) {
-    //* Отрисовываем точку маршрута
-    renderEventItem(tripEventsList, wayPoints[i]);
-  }
-}
+const tripPresenter = new TripPresenter(tripEventsElement);
+tripPresenter.init(wayPoints);

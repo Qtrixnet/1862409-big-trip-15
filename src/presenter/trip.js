@@ -3,6 +3,7 @@ import TripEventsListView from '../view/trip-events-list';
 import NoEventView from '../view/no-event';
 import PointPresenter from './point';
 import { render, RenderPosition } from '../utils/render';
+import { updateItem } from '../utils/common.js';
 
 export default class Trip {
   constructor(tripEventsElementContainer) {
@@ -12,6 +13,10 @@ export default class Trip {
     this._sortComponent =  new SortView();
     this._noEventComponent = new NoEventView();
     this._tripEventsListComponent = new TripEventsListView();
+    this._pointPresenter = new Map();
+
+    this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(wayPoints) {
@@ -21,14 +26,24 @@ export default class Trip {
     this._renderTrip();
   }
 
+  _handleModeChange() {
+    this._pointPresenter.forEach((presenter) => presenter.resetView());
+  }
+
+  _handlePointChange(updatedWayPoint) {
+    this._wayPoints = updateItem(this._wayPoints, updatedWayPoint);
+    this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint)
+  }
+
   _renderSort() {
     //* Метод для рендеринга сортировки
     render(this._tripEventsElementContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderWayPoint(wayPoint) {
-    const pointPresenter = new PointPresenter(this._tripEventsListComponent);
+    const pointPresenter = new PointPresenter(this._tripEventsListComponent, this._handlePointChange, this._handleModeChange);
     pointPresenter.init(wayPoint);
+    this._pointPresenter.set(wayPoint.id, pointPresenter)
   }
 
   _renderWayPoints(from, to) {
@@ -44,6 +59,11 @@ export default class Trip {
   _renderNoEvent() {
     //* Метод для рендеринга загрушки
     render(this._tripEventsElementContainer, this._noEventComponent, RenderPosition.BEFOREEND);
+  }
+
+  _clearTrip() {
+    this._pointPresenter.forEach((presenter) => presenter.destroy());
+    this._pointPresenter.clear();
   }
 
   _renderTrip() {

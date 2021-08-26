@@ -32,7 +32,7 @@ export default class Trip {
 
   _handlePointChange(updatedWayPoint) {
     this._wayPoints = updateItem(this._wayPoints, updatedWayPoint);
-    this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint)
+    this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint);
   }
 
   _renderSort() {
@@ -43,7 +43,7 @@ export default class Trip {
   _renderWayPoint(wayPoint) {
     const pointPresenter = new PointPresenter(this._tripEventsListComponent, this._handlePointChange, this._handleModeChange);
     pointPresenter.init(wayPoint);
-    this._pointPresenter.set(wayPoint.id, pointPresenter)
+    this._pointPresenter.set(wayPoint.id, pointPresenter);
   }
 
   _renderWayPoints(from, to) {

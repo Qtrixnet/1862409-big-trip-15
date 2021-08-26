@@ -37,11 +37,9 @@ export default class Point {
     this._eventEditFormComponent.setFormCloseHandler(this._handleFormSubmit);
     this._eventItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
-
-
     if(prevEventItemComponent === null || this._eventEditFormComponent === null) {
       render(this._wayPointsListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
-      return
+      return;
     }
 
     if (this._mode === Mode.DEFAULT) {
@@ -52,13 +50,13 @@ export default class Point {
       replace(this._eventEditFormComponent, prevEventEditFormComponent);
     }
 
-    remove(prevEventItemComponent)
-    remove(prevEventEditFormComponent)
+    remove(prevEventItemComponent);
+    remove(prevEventEditFormComponent);
   }
 
   destroy(){
-    remove(this._eventItemComponent)
-    remove(this._eventEditFormComponent)
+    remove(this._eventItemComponent);
+    remove(this._eventEditFormComponent);
   }
 
   resetView() {
@@ -101,8 +99,8 @@ export default class Point {
           isFavorite: !this._wayPoint.isFavorite,
         },
       ),
-      );
-    }
+    );
+  }
 
   _handleFormSubmit(wayPoint) {
     this._changeData(wayPoint);

@@ -46,3 +46,13 @@ export const eventDescription = [
   'Donec accumsan risus non felis maximus pretium. Morbi varius, orci a ornare blandit, sem arcu dignissim arcu, id efficitur orci odio nec libero. Pellentesque sed massa cursus, iaculis lectus at, tempor nibh. Pellentesque metus arcu, maximus at facilisis eu, aliquam in nisl. Nulla vehicula ex eu magna pharetra scelerisque. Pellentesque non sodales nisl, nec iaculis mauris. Ut facilisis felis enim, sit amet volutpat justo elementum a. Vivamus sollicitudin sem quis arcu commodo fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit, purus eget aliquam sodales, quam velit sodales tellus, a fermentum felis elit ut lorem. Sed ut maximus dui, ac vulputate elit. Vestibulum laoreet urna consectetur, ultrices ipsum eget, rutrum enim. Integer malesuada bibendum metus. Vivamus aliquet tempus porttitor. Donec pretium mattis ipsum, eu bibendum turpis maximus sed. Donec vitae vehicula sem, a posuere urna.',
 ];
 
+export const SortType = {
+  DEFAULT: 'DEFAULT',
+  TIME: 'TIME',
+  PRICE: 'PRICE',
+};
+
+export const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};

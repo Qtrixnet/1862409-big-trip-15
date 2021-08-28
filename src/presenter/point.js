@@ -1,11 +1,7 @@
 import TripEventsItemView from '../view/trip-events-item';
 import EventEditFormView from '../view/event-edit-form';
 import { render, RenderPosition, replace, remove } from '../utils/render';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import { Mode } from '../const';
 
 export default class Point {
   constructor(wayPointsListContainer, changeData, changeMode) {

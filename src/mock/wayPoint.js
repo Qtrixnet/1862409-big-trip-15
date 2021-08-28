@@ -215,6 +215,7 @@ export const generateWayPoint = () => {
     fullTimeFrom,
     minifiedTimeTo,
     fullTimeTo,
+    durationInSeconds: duration,
     duration: durationFormat(duration),
     price,
     offers: generateOffers(type),

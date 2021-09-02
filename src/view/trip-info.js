@@ -10,7 +10,7 @@ const createTripInfoTemplate = ({ dateFrom, dateTo, citiesList }) => {
 
         //* Форматируем список городов, если их больше 2х
         if (withoutRepeat.length > 2) {
-          return `${withoutRepeat[0]} - ... - ${withoutRepeat[withoutRepeat.length - 1]
+          return `${withoutRepeat[0].name} - ... - ${withoutRepeat[withoutRepeat.length - 1].name
           }`;
         } else {
           return withoutRepeat.join(' - ');

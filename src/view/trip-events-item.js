@@ -11,19 +11,29 @@ const createEventsItemTemplate = ({
   duration,
   price,
 }) => {
-  let offersMarkup = '';
-  for (const offer of offers) {
-    offersMarkup += `
-      <li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-        &nbsp;&plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </li>`;
-  }
+
+  const createOffersMarkupTemplate = (tripOffers) => {
+    if(tripOffers) {
+      const { offers } = tripOffers;
+      return offers.map((offer) => `
+          <li class="event__offer">
+            <span class="event__offer-title">${offer.title}</span>
+              &nbsp;&plus;&euro;&nbsp;
+            <span class="event__offer-price">${offer.price}</span>
+          </li>
+        `).join('');
+    }
+    return '';
+  };
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
     : 'event__favorite-btn';
+
+  const matchedOffers = offers.find((offer) => offer.type === type);
+  // console.log(matchedOffers);
+
+  const offersMarkupTemplate = createOffersMarkupTemplate(matchedOffers);
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -31,7 +41,7 @@ const createEventsItemTemplate = ({
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${city}</h3>
+      <h3 class="event__title">${type} ${city.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="2019-03-18T10:30">${minifiedTimeFrom}</time>
@@ -45,7 +55,7 @@ const createEventsItemTemplate = ({
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-      ${offersMarkup}
+      ${offersMarkupTemplate}
       </ul>
       <button class="${favoriteClassName}" type="button">
         <span class="visually-hidden">Add to favorite</span>

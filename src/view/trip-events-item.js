@@ -14,8 +14,8 @@ const createEventsItemTemplate = ({
 
   const createOffersMarkupTemplate = (tripOffers) => {
     if(tripOffers) {
-      const { offers } = tripOffers;
-      return offers.map((offer) => `
+      const { matchedTripOffers } = tripOffers;
+      return matchedTripOffers.map((offer) => `
           <li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
               &nbsp;&plus;&euro;&nbsp;

@@ -28,14 +28,13 @@ const createOffersTemplate = (offers, isOffers) => {
   return '';
 };
 
-const createDescriptionTemplate = (city, chosenCity) => {
-  //! Передаем изначальный город и выбранный город
-  return `
+//! Передаем изначальный город и выбранный город
+const createDescriptionTemplate = (city, chosenCity) => `
   <section class="event__section event__section--destination">
     <h3 class="event__section-title event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${chosenCity ? chosenCity.description : city.description}</p>
   </section>
-`};
+`;
 
 const createDestinationListTemplate = (citiesList) => citiesList.map((city) => `
   <option value="${city.name}"></option>

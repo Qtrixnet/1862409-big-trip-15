@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { getRandomInteger } from '../utils/common';
-import { eventTypes, eventCities, eventDescription, offers } from '../const';
+import { eventTypes, eventCities, offers } from '../const';
 import { nanoid } from 'nanoid';
 
 //* Генерация даты путешествия

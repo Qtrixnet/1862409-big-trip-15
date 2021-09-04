@@ -9,7 +9,7 @@ const createEventCreateFormTemplate = ({
   fullTimeTo,
   wayPointsList,
   price,
-  desription,
+  description,
   pictures,
   city,
 }) => {
@@ -71,7 +71,7 @@ const createEventCreateFormTemplate = ({
       </section>` : ''}
       <section class='event__section event__section--destination'>
         <h3 class='event__section-title event__section-title--destination'>Destination</h3>
-        <p class='event__destination-description'>${desription}</p>
+        <p class='event__destination-description'>${description}</p>
         <div class='event__photos-container'>
           <div class='event__photos-tape'>
             ${photosMarkup}

@@ -1,4 +1,8 @@
 import SmartView from './smart';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css'
+import '../../node_modules/flatpickr/dist/themes/material_blue.css'
 
 const createWayPointsListTemplate = (wayPoints) => wayPoints.map((wayPoint) => `
   <div class="event__type-item">
@@ -119,12 +123,16 @@ export default class EventEditForm extends SmartView {
     super();
     //* На вход получили информацию и далее работаем с состоянием
     this._data = EventEditForm.parsePointToData(wayPoint);
+    this._datepicker = null;
+
     this._wayPoint = wayPoint;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._typeChooseHandler = this._typeChooseHandler.bind(this);
+    this._dateChangeHandler = this._dateChangeHandler.bind(this);
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   //* Point - превращаем информацию в состояние
@@ -190,6 +198,7 @@ export default class EventEditForm extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmitClick);
     this.setFormCloseHandler(this._callback.formCloseClick);
   }
@@ -221,11 +230,34 @@ export default class EventEditForm extends SmartView {
     }, true);
   }
 
+  _setDatepicker() {
+    if(this._datepicker) {
+      this._datepicker = null;
+    }
+    this._datepicker = flatpickr(
+      this.getElement().querySelectorAll('.event__input--time'),
+      {
+        dateFormat: 'd/m/y h:i',
+        mode: "range",
+        defaultDate: this._fullTimeFrom,
+        onChange: this._dateChangeHandler,
+      }
+    )
+  }
+
   _typeChooseHandler(evt) {
     evt.preventDefault();
     this.updateData({
       chosenType: evt.target.textContent,
       type: evt.target.textContent,
+    });
+  }
+
+  _dateChangeHandler(evt) {
+    this.updateData({
+      fullTimeFrom: evt[0],
+      fullTimeTo: evt[1],
+      duration: evt[1] - evt[0]
     });
   }
 }

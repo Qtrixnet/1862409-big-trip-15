@@ -35,7 +35,6 @@ const createEventsItemTemplate = ({
 
 
   const durationFormat = (durationValue) => {
-    console.log(durationValue);
     const days = Math.floor(durationValue / (1000 * 60 * 60 * 24) % 30),
       hours = Math.floor((durationValue / (1000 * 60 * 60)) % 24),
       minutes = Math.floor((durationValue / (1000 * 60)) % 60);
@@ -49,7 +48,7 @@ const createEventsItemTemplate = ({
     }
   };
 
-  const formattedDuration = durationFormat(duration)
+  const formattedDuration = durationFormat(duration);
 
   return `<li class="trip-events__item">
     <div class="event">

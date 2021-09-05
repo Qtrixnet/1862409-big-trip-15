@@ -1,8 +1,8 @@
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
 
-import '../../node_modules/flatpickr/dist/flatpickr.min.css'
-import '../../node_modules/flatpickr/dist/themes/material_blue.css'
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import '../../node_modules/flatpickr/dist/themes/material_blue.css';
 
 const createWayPointsListTemplate = (wayPoints) => wayPoints.map((wayPoint) => `
   <div class="event__type-item">
@@ -238,11 +238,11 @@ export default class EventEditForm extends SmartView {
       this.getElement().querySelectorAll('.event__input--time'),
       {
         dateFormat: 'd/m/y h:i',
-        mode: "range",
+        mode: 'range',
         defaultDate: this._fullTimeFrom,
         onChange: this._dateChangeHandler,
-      }
-    )
+      },
+    );
   }
 
   _typeChooseHandler(evt) {
@@ -257,7 +257,7 @@ export default class EventEditForm extends SmartView {
     this.updateData({
       fullTimeFrom: evt[0],
       fullTimeTo: evt[1],
-      duration: evt[1] - evt[0]
+      duration: evt[1] - evt[0],
     });
   }
 }

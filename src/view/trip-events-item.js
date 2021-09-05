@@ -14,8 +14,7 @@ const createEventsItemTemplate = ({
 
   const createOffersMarkupTemplate = (tripOffers) => {
     if(tripOffers) {
-      const { matchedTripOffers } = tripOffers;
-      return matchedTripOffers.map((offer) => `
+      return tripOffers.offers.map((offer) => `
           <li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
               &nbsp;&plus;&euro;&nbsp;
@@ -31,9 +30,25 @@ const createEventsItemTemplate = ({
     : 'event__favorite-btn';
 
   const matchedOffers = offers.find((offer) => offer.type === type);
-  // console.log(matchedOffers);
 
   const offersMarkupTemplate = createOffersMarkupTemplate(matchedOffers);
+
+
+  const durationFormat = (durationValue) => {
+    const days = Math.floor(durationValue / (1000 * 60 * 60 * 24) % 30),
+      hours = Math.floor((durationValue / (1000 * 60 * 60)) % 24),
+      minutes = Math.floor((durationValue / (1000 * 60)) % 60);
+
+    if (days !== 0) {
+      return `${days}D ${hours}H ${minutes}M`;
+    } else if (days === 0 && hours !== 0) {
+      return `${hours}H ${minutes}M`;
+    } else {
+      return `${minutes}M`;
+    }
+  };
+
+  const formattedDuration = durationFormat(duration);
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -48,7 +63,7 @@ const createEventsItemTemplate = ({
           &mdash;
           <time class="event__end-time" datetime="2019-03-18T11:00">${minifiedTimeTo}</time>
         </p>
-        <p class="event__duration">${duration}</p>
+        <p class="event__duration">${formattedDuration}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${price}</span>

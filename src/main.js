@@ -5,13 +5,18 @@ import TripInfoView from './view/trip-info';
 
 import TripPresenter from './presenter/trip';
 
+import PointsModel from './model/points';
+
 import { generateWayPoint } from './mock/wayPoint';
 import { generateHeaderInfo } from './mock/headerInfo';
 import { render, RenderPosition } from './utils/render';
 
 //* 20 тестовых компонентов поездок
 const ELEMS__COUNT = 20;
-const wayPoints = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
+const points = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
+
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
 
 //*Хедер
 //* Меню навигации
@@ -27,15 +32,15 @@ const filtersElement = tripMainElement.querySelector('.trip-controls__filters');
 render(filtersElement, new FiltersView().getElement(), RenderPosition.BEFOREEND);
 
 //* Информация о путешествии (Маршрут и города)
-render(tripMainElement, new TripInfoView(generateHeaderInfo(wayPoints)).getElement(), RenderPosition.AFTERBEGIN);
+render(tripMainElement, new TripInfoView(generateHeaderInfo(points)).getElement(), RenderPosition.AFTERBEGIN);
 //* Информация о путешествии (Стоимость)
 const tripInfoElement = tripMainElement.querySelector('.trip-main__trip-info');
-render(tripInfoElement, new TripCostView(generateHeaderInfo(wayPoints)).getElement(), RenderPosition.BEFOREEND);
+render(tripInfoElement, new TripCostView(generateHeaderInfo(points)).getElement(), RenderPosition.BEFOREEND);
 
 //*Контейнер для точек маршрута
 const mainPageElement = document.querySelector('.page-body__page-main'),
   tripEventsElement = mainPageElement.querySelector('.trip-events');
 // const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
 
-const tripPresenter = new TripPresenter(tripEventsElement);
-tripPresenter.init(wayPoints);
+const tripPresenter = new TripPresenter(tripEventsElement, pointsModel);
+tripPresenter.init(points);

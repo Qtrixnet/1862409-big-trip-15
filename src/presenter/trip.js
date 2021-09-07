@@ -8,9 +8,10 @@ import { sortPointsByDay, sortPointsByTime, sortPointsByPrice } from '../utils/t
 import { SortType } from '../const.js';
 
 export default class Trip {
-  constructor(tripEventsElementContainer) {
+  constructor(tripEventsElementContainer, pointsModel) {
     //* Главный контейнер с маршрутом путешествия
     this._tripEventsElementContainer = tripEventsElementContainer;
+    this._pointsModel = pointsModel;
 
     this._sortComponent =  new SortView();
     this._noEventComponent = new NoEventView();
@@ -29,6 +30,10 @@ export default class Trip {
     //*Рендер контейнера для точек маршрута
     render(this._tripEventsElementContainer, this._tripEventsListComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  _getPoints() {
+    return this._pointsModel.getPoints();
   }
 
   _handleModeChange() {

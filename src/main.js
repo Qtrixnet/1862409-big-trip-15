@@ -43,4 +43,4 @@ const mainPageElement = document.querySelector('.page-body__page-main'),
 // const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
 
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel);
-tripPresenter.init(points);
+tripPresenter.init();

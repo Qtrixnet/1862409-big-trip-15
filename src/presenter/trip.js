@@ -3,7 +3,6 @@ import TripEventsListView from '../view/trip-events-list';
 import NoEventView from '../view/no-event';
 import PointPresenter from './point';
 import { render, RenderPosition } from '../utils/render';
-import { updateItem } from '../utils/common.js';
 import { sortPointsByDay, sortPointsByTime, sortPointsByPrice } from '../utils/tripPoint';
 import { SortType } from '../const.js';
 
@@ -24,15 +23,19 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(wayPoints) {
-    this._wayPoints = wayPoints.slice().sort(sortPointsByDay);
-    this._sourcedWayPoints = wayPoints.slice();
+  init() {
     //*Рендер контейнера для точек маршрута
     render(this._tripEventsElementContainer, this._tripEventsListComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
   }
 
   _getPoints() {
+    switch(this._currentSortType) {
+      case SortType.TIME:
+        return this._pointsModel.getPoints().slice().sort(sortPointsByTime);
+      case SortType.PRICE:
+        return this._pointsModel.getPoints().slice().sort(sortPointsByPrice);
+    }
     return this._pointsModel.getPoints();
   }
 
@@ -41,31 +44,14 @@ export default class Trip {
   }
 
   _handlePointChange(updatedWayPoint) {
-    this._wayPoints = updateItem(this._wayPoints, updatedWayPoint);
-    this._sourcedWayPoints = updateItem(this._sourcedWayPoints, updatedWayPoint);
     this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint);
-  }
-
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.TIME:
-        this._wayPoints.sort(sortPointsByTime);
-        break;
-      case SortType.PRICE:
-        this._wayPoints.sort(sortPointsByPrice);
-        break;
-      default:
-        this._wayPoints.sort(sortPointsByDay);
-    }
-
-    this._currentSortType = sortType;
   }
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
-    this._sortPoints(sortType);
+    this._currentSortType = sortType;
     this._clearTrip();
     this._renderTrip();
   }
@@ -82,14 +68,15 @@ export default class Trip {
     this._pointPresenter.set(wayPoint.id, pointPresenter);
   }
 
-  _renderWayPoints(from, to) {
-    this._wayPoints
-      .slice(from, to)
-      .forEach((wayPoint) => this._renderWayPoint(wayPoint));
+  _renderWayPoints(points) {
+    points.forEach((point) => this._renderWayPoint(point));
   }
 
   _renderWayPointsList(){
-    this._renderWayPoints(0, this._wayPoints.length);
+    const pointsCount = this._getPoints().length;
+    const points = this._getPoints().slice(0, pointsCount);
+
+    this._renderWayPoints(points);
   }
 
   _renderNoEvent() {
@@ -104,8 +91,8 @@ export default class Trip {
 
   _renderTrip() {
     //* Метод для начала работы модуля
-    if(this._wayPoints.length === 0) {
-      render(this._tripEventsElementContainer, this._noEventComponent, RenderPosition.BEFOREEND);
+    if(this._getPoints().length === 0) {
+      this._renderNoEvent();
       return;
     }
     this._renderSort();

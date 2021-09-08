@@ -18,9 +18,13 @@ export default class Trip {
     this._pointPresenter = new Map();
     this._currentSortType = SortType.DEFAULT;
 
-    this._handlePointChange = this._handlePointChange.bind(this);
+    // this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -43,8 +47,24 @@ export default class Trip {
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
-  _handlePointChange(updatedWayPoint) {
-    this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint);
+  // _handlePointChange(updatedWayPoint) {
+  //   this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint);
+  // }
+
+  _handleViewAction(actionType, updateType, update) {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  }
+
+  _handleModelEvent(updateType, data) {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _handleSortTypeChange(sortType) {
@@ -63,7 +83,7 @@ export default class Trip {
   }
 
   _renderWayPoint(wayPoint) {
-    const pointPresenter = new PointPresenter(this._tripEventsListComponent, this._handlePointChange, this._handleModeChange);
+    const pointPresenter = new PointPresenter(this._tripEventsListComponent, this._handleViewAction, this._handleModeChange);
     pointPresenter.init(wayPoint);
     this._pointPresenter.set(wayPoint.id, pointPresenter);
   }

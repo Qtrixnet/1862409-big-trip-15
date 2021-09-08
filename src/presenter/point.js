@@ -1,6 +1,7 @@
 import TripEventsItemView from '../view/trip-events-item';
 import EventEditFormView from '../view/event-edit-form';
 import { render, RenderPosition, replace, remove } from '../utils/render';
+import { UserAction, UpdateType } from '../const';
 import { Mode } from '../const';
 
 export default class Point {
@@ -88,6 +89,8 @@ export default class Point {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._wayPoint,
@@ -99,7 +102,11 @@ export default class Point {
   }
 
   _handleFormSubmit(wayPoint) {
-    this._changeData(wayPoint);
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      wayPoint,
+    );
     this._replaceFormToItem();
   }
 }

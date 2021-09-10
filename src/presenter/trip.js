@@ -12,7 +12,6 @@ export default class Trip {
     this._tripEventsElementContainer = tripEventsElementContainer;
     this._pointsModel = pointsModel;
 
-    // this._sortComponent =  new SortView();
     this._noEventComponent = new NoEventView();
     this._tripEventsListComponent = new TripEventsListView();
     this._pointPresenter = new Map();
@@ -20,7 +19,6 @@ export default class Trip {
 
     this._sortComponent = null;
 
-    // this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -41,8 +39,10 @@ export default class Trip {
         return this._pointsModel.getPoints().slice().sort(sortPointsByTime);
       case SortType.PRICE:
         return this._pointsModel.getPoints().slice().sort(sortPointsByPrice);
+      default:
+        return this._pointsModel.getPoints().slice().sort(sortPointsByDay);
     }
-    return this._pointsModel.getPoints();
+    // return this._pointsModel.getPoints();
   }
 
   _handleModeChange() {
@@ -71,14 +71,17 @@ export default class Trip {
     switch (updateType) {
       case UpdateType.PATCH:
         this._pointPresenter.get(data.id).init(data);
+        console.log('PATCH')
         break;
       case UpdateType.MINOR:
         this._clearTrip();
         this._renderTrip();
+        console.log('MINOR')
         break;
       case UpdateType.MAJOR:
-        this._clearTrip({resetRenderedPointCount: true, resetSortType: true});
+        this._clearTrip({ resetSortType: true });
         this._renderTrip();
+        console.log('MAJOR')
         break;
     }
   }
@@ -126,14 +129,12 @@ export default class Trip {
     render(this._tripEventsElementContainer, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTrip({resetRenderedPointCount = false, resetSortType = false} = {}) {
-    const pointCount = this._getPoints().length;
-
+  _clearTrip({resetSortType = false} = {}) {
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
 
     remove(this._sortComponent);
-    // remove(this._noPointComponent);
+    remove(this._noEventComponent);
 
     if(resetSortType) {
       this._currentSortType = SortType.DEFAULT;
@@ -151,11 +152,7 @@ export default class Trip {
     }
 
     this._renderSort();
-
-    // this._renderWayPointsList();
-
-    this._renderWayPoints(points.slice(0, pointCount));
-
+    this._renderWayPoints(points);
   }
 
 }

@@ -18,6 +18,7 @@ export default class Point {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(wayPoint) {
@@ -33,6 +34,7 @@ export default class Point {
     this._eventEditFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditFormComponent.setFormCloseHandler(this._handleFormSubmit);
     this._eventItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventEditFormComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if(prevEventItemComponent === null || this._eventEditFormComponent === null) {
       render(this._wayPointsListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
@@ -101,12 +103,21 @@ export default class Point {
     );
   }
 
-  _handleFormSubmit(wayPoint) {
+  _handleFormSubmit(update) {
+    // isMajorUpdate
     this._changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      wayPoint,
+      UpdateType.MAJOR,
+      update,
     );
     this._replaceFormToItem();
+  }
+
+  _handleDeleteClick(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
   }
 }

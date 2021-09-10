@@ -48,7 +48,6 @@ export const generateWayPoint = () => {
     fullTimeFrom,
     minifiedTimeTo,
     fullTimeTo,
-    durationInSeconds: duration,
     duration,
     price,
     offers,

@@ -131,8 +131,27 @@ export default class EventEditForm extends SmartView {
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._typeChooseHandler = this._typeChooseHandler.bind(this);
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if(this._datepicker) {
+      this._datepicker = null;
+    }
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EventEditForm.parseDataToPoint(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
   //* Point - превращаем информацию в состояние

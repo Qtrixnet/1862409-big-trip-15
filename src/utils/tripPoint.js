@@ -46,3 +46,8 @@ export const sortPointsByDay = (taskA, taskB) => dayjs(taskA.tripDate).diff(dayj
 export const sortPointsByTime = (taskA, taskB) => dayjs(taskB.duration).diff(dayjs(taskA.duration));
 
 export const sortPointsByPrice = (taskA, taskB) => dayjs(taskB.price).diff(dayjs(taskA.price));
+
+export const isDateFuture = (date) => dayjs().isAfter(date, 'D');
+
+export const isDatePast = (date) => dayjs().isBefore(date, 'D');
+

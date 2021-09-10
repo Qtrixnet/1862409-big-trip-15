@@ -17,6 +17,21 @@ import { render, RenderPosition } from './utils/render';
 const ELEMS__COUNT = 20;
 const points = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
 
+const filters = [
+  {
+    type: 'everything',
+    name: 'EVERYTHING',
+  },
+  {
+    type: 'future',
+    name: 'FUTURE',
+  },
+  {
+    type: 'past',
+    name: 'PAST',
+  },
+];
+
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
@@ -33,7 +48,7 @@ const tripMainElement = headerElement.querySelector('.trip-main');
 
 //* Фильтры
 const filtersElement = tripMainElement.querySelector('.trip-controls__filters');
-render(filtersElement, new FiltersView().getElement(), RenderPosition.BEFOREEND);
+render(filtersElement, new FiltersView(filters, 'everything').getElement(), RenderPosition.BEFOREEND);
 
 //* Информация о путешествии (Маршрут и города)
 render(tripMainElement, new TripInfoView(generateHeaderInfo(points)).getElement(), RenderPosition.AFTERBEGIN);

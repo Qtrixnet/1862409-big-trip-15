@@ -6,10 +6,12 @@ import TripInfoView from './view/trip-info';
 import TripPresenter from './presenter/trip';
 
 import PointsModel from './model/points';
+import FilterModel from './model/filter.js';
 
 import { generateWayPoint } from './mock/wayPoint';
 import { generateHeaderInfo } from './mock/headerInfo';
 import { render, RenderPosition } from './utils/render';
+
 
 //* 20 тестовых компонентов поездок
 const ELEMS__COUNT = 20;
@@ -17,6 +19,8 @@ const points = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
+
+const filterModel = new FilterModel();
 
 //*Хедер
 //* Меню навигации

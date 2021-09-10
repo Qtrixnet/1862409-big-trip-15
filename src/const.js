@@ -100,6 +100,12 @@ export const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+export const FilterType = {
+  EVERYTHING: 'everuthing',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
 export const offers = [
   {
     type: 'taxi',

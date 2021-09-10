@@ -25,7 +25,7 @@ const generateCity = () => {
 
 //* Рыбные данные для точки маршрута и формы редактирования
 export const generateWayPoint = () => {
-  const tripDate = dayjs(generateDate()).format('MMM D');
+  const tripDate = dayjs(generateDate());
   const type = generateRandomWayPoint();
   const price = getRandomInteger(100, 2000);
   const timeFrom = dayjs().minute(getRandomInteger(0, 100));

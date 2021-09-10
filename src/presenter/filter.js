@@ -59,15 +59,15 @@ export default class Filter {
     return [
       {
         type: FilterType.EVERYTHING,
-        name: 'Everything',
+        name: 'everything',
       },
       {
         type: FilterType.FUTURE,
-        name: 'Future',
+        name: 'future',
       },
       {
         type: FilterType.PAST,
-        name: 'Past',
+        name: 'past',
       },
     ];
   }

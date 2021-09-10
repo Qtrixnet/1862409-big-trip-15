@@ -101,7 +101,7 @@ export const UpdateType = {
 };
 
 export const FilterType = {
-  EVERYTHING: 'everuthing',
+  EVERYTHING: 'everything',
   FUTURE: 'future',
   PAST: 'past',
 };

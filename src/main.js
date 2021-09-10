@@ -60,7 +60,7 @@ const mainPageElement = document.querySelector('.page-body__page-main'),
   tripEventsElement = mainPageElement.querySelector('.trip-events');
 // const tripEventsList = tripEventsElement.querySelector('.trip-events__list');
 
-const tripPresenter = new TripPresenter(tripEventsElement, pointsModel);
+const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
 
 filterPresenter.init();

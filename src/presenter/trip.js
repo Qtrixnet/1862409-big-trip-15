@@ -5,7 +5,7 @@ import PointPresenter from './point';
 import { filter } from '../utils/filter';
 import { remove, render, RenderPosition } from '../utils/render';
 import { sortPointsByDay, sortPointsByTime, sortPointsByPrice } from '../utils/tripPoint';
-import { SortType, UpdateType, UserAction } from '../const.js';
+import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 
 export default class Trip {
   constructor(tripEventsElementContainer, pointsModel, filterModel) {
@@ -17,9 +17,11 @@ export default class Trip {
     this._noEventComponent = new NoEventView();
     this._tripEventsListComponent = new TripEventsListView();
     this._pointPresenter = new Map();
+    this._filterType = FilterType.EVERYTHING;
     this._currentSortType = SortType.DEFAULT;
 
     this._sortComponent = null;
+    this._noTaskComponent = null;
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -37,9 +39,9 @@ export default class Trip {
   }
 
   _getPoints() {
-    const filterType = this._filterModel.getFilter();
+    this._filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
-    const filtredPoints = filter[filterType](points);
+    const filtredPoints = filter[this._filterType](points);
 
     switch(this._currentSortType) {
       case SortType.TIME:
@@ -130,6 +132,7 @@ export default class Trip {
 
   _renderNoEvent() {
     //* Метод для рендеринга загрушки
+    this._noEventComponent = new NoEventView(this._filterType);
     render(this._tripEventsElementContainer, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
@@ -138,7 +141,10 @@ export default class Trip {
     this._pointPresenter.clear();
 
     remove(this._sortComponent);
-    remove(this._noEventComponent);
+
+    if(this._noEventComponent) {
+      remove(this._noEventComponent);
+    }
 
     if(resetSortType) {
       this._currentSortType = SortType.DEFAULT;

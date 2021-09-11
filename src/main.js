@@ -13,7 +13,7 @@ import { generateHeaderInfo } from './mock/headerInfo';
 import { render, RenderPosition } from './utils/render';
 
 //* 20 тестовых компонентов поездок
-const ELEMS__COUNT = 2;
+const ELEMS__COUNT = 20;
 const points = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
 
 const pointsModel = new PointsModel();

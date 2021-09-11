@@ -6,7 +6,6 @@ import {UserAction, UpdateType} from '../const.js';
 export default class PointNew {
   constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
-    console.log(pointListContainer)
     this._changeData = changeData;
 
     this._pointEditComponent = null;

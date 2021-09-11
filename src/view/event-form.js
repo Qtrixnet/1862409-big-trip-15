@@ -1,8 +1,65 @@
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
+import dayjs from 'dayjs';
+import he from 'he';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import '../../node_modules/flatpickr/dist/themes/material_blue.css';
+
+const BLANK_POINT = {
+  citiesList: [],
+  city: {
+    description: 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
+    name: 'Geneva',
+    pictures: [{
+      src: 'http://picsum.photos/248/152?r=1',
+      description: 'Geneva parliament building',
+    }],
+  },
+  duration: 0,
+  eventCities: [],
+  fullTimeFrom: dayjs(),
+  fullTimeTo: dayjs(),
+  id: '',
+  isFavorite: false,
+  minifiedTimeFrom: dayjs().format('hh:mm'),
+  minifiedTimeTo: dayjs().format('hh:mm'),
+  offers: [{
+    type: 'flight',
+    offers: [
+      {
+        title: 'Add luggage',
+        price: 30,
+      },
+      {
+        title: 'Switch to comfort class',
+        price: 100,
+      },
+      {
+        title: 'Add meal',
+        price: 15,
+      },
+      {
+        title: 'Choose seats',
+        price: 5,
+      },
+    ],
+  }],
+  price: '',
+  tripDate: dayjs(),
+  type: 'flight',
+  wayPointsList: [
+    'taxi',
+    'bus',
+    'train',
+    'ship',
+    'drive',
+    'flight',
+    'check-in',
+    'sightseeing',
+    'restaurant',
+  ],
+};
 
 const createWayPointsListTemplate = (wayPoints) => wayPoints.map((wayPoint) => `
   <div class="event__type-item">
@@ -87,7 +144,7 @@ const createEventEditFormTemplate = ({
           <label class="event__label event__type-output" for="event-destination-1">
             ${chosenType ? chosenType : type}
           </label>
-          <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city.name}" list="destination-list-1">
+          <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(city.name)}" list="destination-list-1">
           <datalist id='destination-list-1'>${citiesTemplate}</datalist>
         </div>
         <div class="event__field-group event__field-group--time">
@@ -102,7 +159,7 @@ const createEventEditFormTemplate = ({
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input event__input--price" id="event-price-1" type="text" pattern="^[ 0-9]+$" name="event-price" value="${he.encode(`${price}`)}">
         </div>
         <button class="event__save-btn btn btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
@@ -119,7 +176,7 @@ const createEventEditFormTemplate = ({
 };
 
 export default class EventEditForm extends SmartView {
-  constructor(wayPoint) {
+  constructor(wayPoint = BLANK_POINT) {
     super();
     //* На вход получили информацию и далее работаем с состоянием
     this._data = EventEditForm.parsePointToData(wayPoint);
@@ -131,8 +188,27 @@ export default class EventEditForm extends SmartView {
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._typeChooseHandler = this._typeChooseHandler.bind(this);
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if(this._datepicker) {
+      this._datepicker = null;
+    }
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EventEditForm.parseDataToPoint(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
   //* Point - превращаем информацию в состояние

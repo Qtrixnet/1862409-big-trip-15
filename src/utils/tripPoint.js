@@ -43,6 +43,11 @@ export const getDestinationListMarkup = (citiesList) => {
 
 export const sortPointsByDay = (taskA, taskB) => dayjs(taskA.tripDate).diff(dayjs(taskB.tripDate));
 
-export const sortPointsByTime = (taskA, taskB) => dayjs(taskB.durationInSeconds).diff(dayjs(taskA.durationInSeconds));
+export const sortPointsByTime = (taskA, taskB) => dayjs(taskB.duration).diff(dayjs(taskA.duration));
 
 export const sortPointsByPrice = (taskA, taskB) => dayjs(taskB.price).diff(dayjs(taskA.price));
+
+export const isDateFuture = (date) => dayjs().isBefore(date);
+
+export const isDatePast = (date) => dayjs().isAfter(date);
+

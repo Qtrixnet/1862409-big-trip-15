@@ -1,11 +1,12 @@
 import TripEventsItemView from '../view/trip-events-item';
-import EventEditFormView from '../view/event-edit-form';
+import EventEditFormView from '../view/event-form';
 import { render, RenderPosition, replace, remove } from '../utils/render';
+import { UserAction, UpdateType } from '../const';
 import { Mode } from '../const';
 
 export default class Point {
-  constructor(wayPointsListContainer, changeData, changeMode) {
-    this._wayPointsListContainer = wayPointsListContainer;
+  constructor(pointsListContainer, changeData, changeMode) {
+    this._wayPointsListContainer = pointsListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -17,6 +18,7 @@ export default class Point {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(wayPoint) {
@@ -32,6 +34,7 @@ export default class Point {
     this._eventEditFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditFormComponent.setFormCloseHandler(this._handleFormSubmit);
     this._eventItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventEditFormComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if(prevEventItemComponent === null || this._eventEditFormComponent === null) {
       render(this._wayPointsListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
@@ -88,6 +91,8 @@ export default class Point {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._wayPoint,
@@ -98,8 +103,21 @@ export default class Point {
     );
   }
 
-  _handleFormSubmit(wayPoint) {
-    this._changeData(wayPoint);
+  _handleFormSubmit(update) {
+    // isMajorUpdate
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MAJOR,
+      update,
+    );
     this._replaceFormToItem();
+  }
+
+  _handleDeleteClick(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
   }
 }

@@ -88,6 +88,30 @@ export const Mode = {
   EDITING: 'EDITING',
 };
 
+export const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT', //! PATCH
+  ADD_POINT: 'ADD_POINT', //! MAJOR (обновление информации в хедере)
+  DELETE_POINT: 'DELETE_POINT', //! MAJOR (обновление информации в хедере)
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR', //! Нужен ли?
+  MAJOR: 'MAJOR',
+};
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
+export const MenuItem = {
+  ADD_NEW_POINT: 'ADD_NEW_POINT',
+  POINTS: 'POINTS',
+  STATISTICS: 'STATISTICS',
+};
+
 export const offers = [
   {
     type: 'taxi',

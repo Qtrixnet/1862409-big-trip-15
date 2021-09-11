@@ -2,109 +2,178 @@ import SortView from '../view/sort';
 import TripEventsListView from '../view/trip-events-list';
 import NoEventView from '../view/no-event';
 import PointPresenter from './point';
-import { render, RenderPosition } from '../utils/render';
-import { updateItem } from '../utils/common.js';
+import PointNewPresenter from './point-new.js';
+import { filter } from '../utils/filter';
+import { remove, render, RenderPosition } from '../utils/render';
 import { sortPointsByDay, sortPointsByTime, sortPointsByPrice } from '../utils/tripPoint';
-import { SortType } from '../const.js';
+import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 
 export default class Trip {
-  constructor(tripEventsElementContainer) {
+  constructor(tripEventsElementContainer, pointsModel, filterModel) {
     //* Главный контейнер с маршрутом путешествия
     this._tripEventsElementContainer = tripEventsElementContainer;
+    this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
-    this._sortComponent =  new SortView();
     this._noEventComponent = new NoEventView();
     this._tripEventsListComponent = new TripEventsListView();
     this._pointPresenter = new Map();
+    this._filterType = FilterType.EVERYTHING;
     this._currentSortType = SortType.DEFAULT;
 
-    this._handlePointChange = this._handlePointChange.bind(this);
+    this._sortComponent = null;
+    this._noTaskComponent = null;
+
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._tripEventsListComponent, this._handleViewAction);
   }
 
-  init(wayPoints) {
-    this._wayPoints = wayPoints.slice().sort(sortPointsByDay);
-    this._sourcedWayPoints = wayPoints.slice();
+  init() {
     //*Рендер контейнера для точек маршрута
     render(this._tripEventsElementContainer, this._tripEventsListComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
   }
 
+  createPoint() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
+  }
+
+  _getPoints() {
+    this._filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filtredPoints = filter[this._filterType](points);
+
+    switch(this._currentSortType) {
+      case SortType.TIME:
+        return filtredPoints.sort(sortPointsByTime);
+      case SortType.PRICE:
+        return filtredPoints.sort(sortPointsByPrice);
+      default:
+        return filtredPoints.sort(sortPointsByDay);
+    }
+    // return filtredPoints;
+  }
+
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
-  _handlePointChange(updatedWayPoint) {
-    this._wayPoints = updateItem(this._wayPoints, updatedWayPoint);
-    this._sourcedWayPoints = updateItem(this._sourcedWayPoints, updatedWayPoint);
-    this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint);
+  // _handlePointChange(updatedWayPoint) {
+  //   this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint);
+  // }
+
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this._pointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this._pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this._pointsModel.deletePoint(updateType, update);
+        break;
+    }
   }
 
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.TIME:
-        this._wayPoints.sort(sortPointsByTime);
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._pointPresenter.get(data.id).init(data);
         break;
-      case SortType.PRICE:
-        this._wayPoints.sort(sortPointsByPrice);
+      case UpdateType.MINOR:
+        this._clearTrip();
+        this._renderTrip();
         break;
-      default:
-        this._wayPoints.sort(sortPointsByDay);
+      case UpdateType.MAJOR:
+        this._clearTrip({ resetSortType: true });
+        this._renderTrip();
+        break;
     }
-
-    this._currentSortType = sortType;
   }
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
-    this._sortPoints(sortType);
-    this._clearTrip();
+    this._currentSortType = sortType;
+    this._clearTrip({resetRenderedPointCount: true});
     this._renderTrip();
   }
 
   _renderSort() {
     //* Метод для рендеринга сортировки
-    render(this._tripEventsElementContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+    // render(this._tripEventsElementContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+    if(this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+    this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._tripEventsElementContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderWayPoint(wayPoint) {
-    const pointPresenter = new PointPresenter(this._tripEventsListComponent, this._handlePointChange, this._handleModeChange);
+    const pointPresenter = new PointPresenter(this._tripEventsListComponent, this._handleViewAction, this._handleModeChange);
     pointPresenter.init(wayPoint);
     this._pointPresenter.set(wayPoint.id, pointPresenter);
   }
 
-  _renderWayPoints(from, to) {
-    this._wayPoints
-      .slice(from, to)
-      .forEach((wayPoint) => this._renderWayPoint(wayPoint));
+  _renderWayPoints(points) {
+    points.forEach((point) => this._renderWayPoint(point));
   }
 
   _renderWayPointsList(){
-    this._renderWayPoints(0, this._wayPoints.length);
+    const pointsCount = this._getPoints().length;
+    const points = this._getPoints().slice(0, pointsCount);
+
+    this._renderWayPoints(points);
   }
 
   _renderNoEvent() {
     //* Метод для рендеринга загрушки
+    this._noEventComponent = new NoEventView(this._filterType);
     render(this._tripEventsElementContainer, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTrip() {
+  _clearTrip({resetSortType = false} = {}) {
+    this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
+
+    remove(this._sortComponent);
+
+    if(this._noEventComponent) {
+      remove(this._noEventComponent);
+    }
+
+    if(resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 
   _renderTrip() {
     //* Метод для начала работы модуля
-    if(this._wayPoints.length === 0) {
-      render(this._tripEventsElementContainer, this._noEventComponent, RenderPosition.BEFOREEND);
+    const points = this._getPoints();
+    const pointCount = points.length;
+
+    if(pointCount === 0) {
+      this._renderNoEvent();
       return;
     }
+
     this._renderSort();
-    this._renderWayPointsList();
+    this._renderWayPoints(points);
   }
 
 }

@@ -1,6 +1,7 @@
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
 import dayjs from 'dayjs';
+import he from 'he';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import '../../node_modules/flatpickr/dist/themes/material_blue.css';
@@ -143,7 +144,7 @@ const createEventEditFormTemplate = ({
           <label class="event__label event__type-output" for="event-destination-1">
             ${chosenType ? chosenType : type}
           </label>
-          <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city.name}" list="destination-list-1">
+          <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(city.name)}" list="destination-list-1">
           <datalist id='destination-list-1'>${citiesTemplate}</datalist>
         </div>
         <div class="event__field-group event__field-group--time">
@@ -158,7 +159,7 @@ const createEventEditFormTemplate = ({
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(`${price}`)}">
         </div>
         <button class="event__save-btn btn btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>

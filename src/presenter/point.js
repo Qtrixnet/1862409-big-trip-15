@@ -1,5 +1,5 @@
 import TripEventsItemView from '../view/trip-events-item';
-import EventEditFormView from '../view/event-edit-form';
+import EventEditFormView from '../view/event-form';
 import { render, RenderPosition, replace, remove } from '../utils/render';
 import { UserAction, UpdateType } from '../const';
 import { Mode } from '../const';

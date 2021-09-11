@@ -1,4 +1,4 @@
-import EventEditFormView from '../view/event-edit-form';
+import EventEditFormView from '../view/event-form';
 import {nanoid} from 'nanoid';
 import {remove, render, RenderPosition} from '../utils/render.js';
 import {UserAction, UpdateType} from '../const.js';

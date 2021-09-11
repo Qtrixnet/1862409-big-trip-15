@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import he from 'he'
+import he from 'he';
 
 const createEventsItemTemplate = ({
   offers,

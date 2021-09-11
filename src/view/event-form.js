@@ -49,16 +49,16 @@ const BLANK_POINT = {
   tripDate: dayjs(),
   type: 'flight',
   wayPointsList: [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
-]
+    'taxi',
+    'bus',
+    'train',
+    'ship',
+    'drive',
+    'flight',
+    'check-in',
+    'sightseeing',
+    'restaurant',
+  ],
 };
 
 const createWayPointsListTemplate = (wayPoints) => wayPoints.map((wayPoint) => `
@@ -115,7 +115,7 @@ const createEventEditFormTemplate = ({
   offers,
   isOffers,
   city,
-  chosenCity
+  chosenCity,
 }) => {
   const matchedOffers = offers.find((offer) => offer.type === type);
   const wayPointsTemplate = createWayPointsListTemplate(wayPointsList);
@@ -159,7 +159,7 @@ const createEventEditFormTemplate = ({
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(`${price}`)}">
+          <input class="event__input event__input--price" id="event-price-1" type="text" pattern="^[ 0-9]+$" name="event-price" value="${he.encode(`${price}`)}">
         </div>
         <button class="event__save-btn btn btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>

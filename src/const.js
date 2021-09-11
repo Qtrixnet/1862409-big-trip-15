@@ -106,6 +106,12 @@ export const FilterType = {
   PAST: 'past',
 };
 
+export const MenuItem = {
+  ADD_NEW_POINT: 'ADD_NEW_POINT',
+  POINTS: 'POINTS',
+  STATISTICS: 'STATISTICS',
+};
+
 export const offers = [
   {
     type: 'taxi',

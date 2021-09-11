@@ -1,8 +1,64 @@
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
+import dayjs from 'dayjs';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import '../../node_modules/flatpickr/dist/themes/material_blue.css';
+
+const BLANK_POINT = {
+  citiesList: [],
+  city: {
+    description: 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
+    name: 'Geneva',
+    pictures: [{
+      src: 'http://picsum.photos/248/152?r=1',
+      description: 'Geneva parliament building',
+    }],
+  },
+  duration: 0,
+  eventCities: [],
+  fullTimeFrom: dayjs(),
+  fullTimeTo: dayjs(),
+  id: '',
+  isFavorite: false,
+  minifiedTimeFrom: dayjs().format('hh:mm'),
+  minifiedTimeTo: dayjs().format('hh:mm'),
+  offers: [{
+    type: 'flight',
+    offers: [
+      {
+        title: 'Add luggage',
+        price: 30,
+      },
+      {
+        title: 'Switch to comfort class',
+        price: 100,
+      },
+      {
+        title: 'Add meal',
+        price: 15,
+      },
+      {
+        title: 'Choose seats',
+        price: 5,
+      },
+    ],
+  }],
+  price: '',
+  tripDate: dayjs(),
+  type: 'flight',
+  wayPointsList: [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant'
+]
+};
 
 const createWayPointsListTemplate = (wayPoints) => wayPoints.map((wayPoint) => `
   <div class="event__type-item">
@@ -58,7 +114,7 @@ const createEventEditFormTemplate = ({
   offers,
   isOffers,
   city,
-  chosenCity,
+  chosenCity
 }) => {
   const matchedOffers = offers.find((offer) => offer.type === type);
   const wayPointsTemplate = createWayPointsListTemplate(wayPointsList);
@@ -119,7 +175,7 @@ const createEventEditFormTemplate = ({
 };
 
 export default class EventEditForm extends SmartView {
-  constructor(wayPoint) {
+  constructor(wayPoint = BLANK_POINT) {
     super();
     //* На вход получили информацию и далее работаем с состоянием
     this._data = EventEditForm.parsePointToData(wayPoint);

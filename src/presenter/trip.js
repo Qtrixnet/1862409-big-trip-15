@@ -2,6 +2,7 @@ import SortView from '../view/sort';
 import TripEventsListView from '../view/trip-events-list';
 import NoEventView from '../view/no-event';
 import PointPresenter from './point';
+import PointNewPresenter from './point-new.js';
 import { filter } from '../utils/filter';
 import { remove, render, RenderPosition } from '../utils/render';
 import { sortPointsByDay, sortPointsByTime, sortPointsByPrice } from '../utils/tripPoint';
@@ -30,12 +31,20 @@ export default class Trip {
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._tripEventsListComponent, this._handleViewAction);
   }
 
   init() {
     //*Рендер контейнера для точек маршрута
     render(this._tripEventsElementContainer, this._tripEventsListComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  createPoint() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
   }
 
   _getPoints() {
@@ -55,6 +64,7 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
@@ -137,6 +147,7 @@ export default class Trip {
   }
 
   _clearTrip({resetSortType = false} = {}) {
+    this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
 

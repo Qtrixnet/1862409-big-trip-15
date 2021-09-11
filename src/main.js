@@ -13,7 +13,7 @@ import { generateHeaderInfo } from './mock/headerInfo';
 import { render, RenderPosition } from './utils/render';
 
 //* 20 тестовых компонентов поездок
-const ELEMS__COUNT = 20;
+const ELEMS__COUNT = 2;
 const points = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
 
 const pointsModel = new PointsModel();
@@ -42,9 +42,16 @@ render(tripInfoElement, new TripCostView(generateHeaderInfo(points)).getElement(
 //*Контейнер для точек маршрута
 const mainPageElement = document.querySelector('.page-body__page-main'),
   tripEventsElement = mainPageElement.querySelector('.trip-events');
+  // tripEventsList = document.querySelector('.trip-events__trip-sort');
+
 
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
+
+document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+  evt.preventDefault();
+  tripPresenter.createPoint();
+});
 
 filterPresenter.init();
 tripPresenter.init();

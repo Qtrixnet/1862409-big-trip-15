@@ -5,8 +5,8 @@ import { UserAction, UpdateType } from '../const';
 import { Mode } from '../const';
 
 export default class Point {
-  constructor(wayPointsListContainer, changeData, changeMode) {
-    this._wayPointsListContainer = wayPointsListContainer;
+  constructor(pointsListContainer, changeData, changeMode) {
+    this._wayPointsListContainer = pointsListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
 

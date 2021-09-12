@@ -29,22 +29,30 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._pointNewPresenter = new PointNewPresenter(this._tripEventsListComponent, this._handleViewAction);
   }
 
   init() {
     //*Рендер контейнера для точек маршрута
     render(this._tripEventsElementContainer, this._tripEventsListComponent, RenderPosition.BEFOREEND);
+
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderTrip();
   }
 
-  createPoint() {
-    this._currentSortType = SortType.DEFAULT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._pointNewPresenter.init();
+  destroy() {
+    this._clearTrip({resetSortType: true});
+
+    remove(this._tripEventsListComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  createPoint(callback) {
+    this._pointNewPresenter.init(callback);
   }
 
   _getPoints() {
@@ -60,17 +68,12 @@ export default class Trip {
       default:
         return filtredPoints.sort(sortPointsByDay);
     }
-    // return filtredPoints;
   }
 
   _handleModeChange() {
     this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
-
-  // _handlePointChange(updatedWayPoint) {
-  //   this._pointPresenter.get(updatedWayPoint.id).init(updatedWayPoint);
-  // }
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
@@ -113,7 +116,6 @@ export default class Trip {
 
   _renderSort() {
     //* Метод для рендеринга сортировки
-    // render(this._tripEventsElementContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     if(this._sortComponent !== null) {
       this._sortComponent = null;
     }

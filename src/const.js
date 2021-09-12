@@ -107,9 +107,9 @@ export const FilterType = {
 };
 
 export const MenuItem = {
-  ADD_NEW_POINT: 'ADD_NEW_POINT',
-  POINTS: 'POINTS',
-  STATISTICS: 'STATISTICS',
+  ADD_NEW_EVENT: 'ADD_NEW_EVENT',
+  TABLE: 'TABLE',
+  STATS: 'STATS',
 };
 
 export const offers = [

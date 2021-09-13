@@ -13,10 +13,24 @@ import { generateWayPoint } from './mock/wayPoint';
 import { generateHeaderInfo } from './mock/headerInfo';
 import { render, RenderPosition } from './utils/render';
 import { MenuItem, UpdateType, FilterType} from './const.js';
+import Api from './api.js';
+
+const AUTHORIZATION = 'Basic 2gshk7u43sgfhyur';
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
 //* 20 тестовых компонентов поездок
 const ELEMS__COUNT = 20;
 const points = new Array(ELEMS__COUNT).fill().map(generateWayPoint);
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getTasks().then((tasks) => {
+  console.log(tasks);
+  // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
+  // а ещё на сервере используется snake_case, а у нас camelCase.
+  // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
+  // Есть вариант получше - паттерн "Адаптер"
+});
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);

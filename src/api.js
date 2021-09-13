@@ -41,7 +41,7 @@ const Method = {
     }
 
     static checkStatus(response) {
-      if (response.ok) {
+      if (!response.ok) {
         throw new Error(`${response.status}: ${response.statusText}`);
       }
 

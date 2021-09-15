@@ -3,7 +3,7 @@ import he from 'he';
 
 const createEventsItemTemplate = ({
   offers,
-  tripDate,
+  fullTimeFrom,
   isFavorite,
   type,
   city,
@@ -14,8 +14,8 @@ const createEventsItemTemplate = ({
 }) => {
 
   const createOffersMarkupTemplate = (tripOffers) => {
-    if(tripOffers) {
-      return tripOffers.offers.map((offer) => `
+    if(tripOffers.length !== 0) {
+      return tripOffers.map((offer) => `
           <li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
               &nbsp;&plus;&euro;&nbsp;
@@ -30,10 +30,7 @@ const createEventsItemTemplate = ({
     ? 'event__favorite-btn event__favorite-btn--active'
     : 'event__favorite-btn';
 
-  const matchedOffers = offers.find((offer) => offer.type === type);
-
-  const offersMarkupTemplate = createOffersMarkupTemplate(matchedOffers);
-
+  const offersMarkupTemplate = createOffersMarkupTemplate(offers);
 
   const durationFormat = (durationValue) => {
     const days = Math.floor(durationValue / (1000 * 60 * 60 * 24) % 30),
@@ -51,9 +48,11 @@ const createEventsItemTemplate = ({
 
   const formattedDuration = durationFormat(duration);
 
+  const formattedTripDate = fullTimeFrom.format('MMM DD');
+
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-18">${tripDate.format('MMM D')}</time>
+      <time class="event__date" datetime="2019-03-18">${formattedTripDate}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>

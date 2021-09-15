@@ -28,8 +28,6 @@ export default class SiteMenu extends AbstractView {
 
   setMenuItem(menuItem) {
     const item = this.getElement().querySelector(`#${menuItem}]`);
-    console.log(item);
-
     if (item !== null) {
       item.checked = true;
     }

@@ -9,12 +9,15 @@ import '../../node_modules/flatpickr/dist/themes/material_blue.css';
 const BLANK_POINT = {
   citiesList: [],
   city: {
-    description: 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
+    description:
+      'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
     name: 'Geneva',
-    pictures: [{
-      src: 'http://picsum.photos/248/152?r=1',
-      description: 'Geneva parliament building',
-    }],
+    pictures: [
+      {
+        src: 'http://picsum.photos/248/152?r=1',
+        description: 'Geneva parliament building',
+      },
+    ],
   },
   duration: 0,
   eventCities: [],
@@ -24,27 +27,30 @@ const BLANK_POINT = {
   isFavorite: false,
   minifiedTimeFrom: dayjs().format('hh:mm'),
   minifiedTimeTo: dayjs().format('hh:mm'),
-  offers: [{
-    type: 'flight',
-    offers: [
-      {
-        title: 'Add luggage',
-        price: 30,
-      },
-      {
-        title: 'Switch to comfort class',
-        price: 100,
-      },
-      {
-        title: 'Add meal',
-        price: 15,
-      },
-      {
-        title: 'Choose seats',
-        price: 5,
-      },
-    ],
-  }],
+  offers: [
+    {
+      type: 'flight',
+      offers: [
+        {
+          title: 'Add luggage',
+          price: 30,
+        },
+        {
+          title: 'Switch to comfort class',
+          price: 100,
+        },
+        {
+          title: 'Add meal',
+          price: 15,
+        },
+        {
+          title: 'Choose seats',
+          price: 5,
+        },
+      ],
+    },
+  ],
+  allOffers: [],
   price: '',
   tripDate: dayjs(),
   type: 'flight',
@@ -61,22 +67,29 @@ const BLANK_POINT = {
   ],
 };
 
-const createWayPointsListTemplate = (wayPoints) => wayPoints.map((wayPoint) => `
+const createWayPointsListTemplate = (wayPoints) =>
+  wayPoints
+    .map(
+      (wayPoint) => `
   <div class="event__type-item">
-    <input id="event-type-${wayPoint}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${wayPoint}">
-    <label class="event__type-label  event__type-label--${wayPoint}" for="event-type-${wayPoint}-1">${wayPoint}</label>
-  </div>`).join('');
+    <input id="event-type-${wayPoint.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${wayPoint.type}">
+    <label class="event__type-label  event__type-label--${wayPoint.type}" for="event-type-${wayPoint.type}-1">${wayPoint.type}</label>
+  </div>`)
+    .join('');
 
-const createOffersTemplate = (offers, isOffers) => {
-  if(offers) {
+const createOffersTemplate = (offers, matchedOffers, isOffers) => {
+  const checkOffer = (matchedOffer) =>
+    offers.find((offer) => offer.title === matchedOffer.title);
+
+  if ((offers, matchedOffers)) {
     return `
-    ${isOffers ? `
+    ${ isOffers ? `
     <section class="event__section event__section--offers">
       <h3 class="event__section-title event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-        ${offers.offers.map((offer) => `
+        ${matchedOffers.offers.map((offer) => `
           <div class='event__offer-selector'>
-            <input class='event__offer-checkbox  visually-hidden' id='${offer.title}' type='checkbox' name='${offer.title}'>
+            <input class='event__offer-checkbox visually-hidden' id='${offer.title}' ${checkOffer(offer, offers) ? 'checked' : ''} type='checkbox' name='${offer.title}'>
               <label class='event__offer-label' for='${offer.title}'>
                 <span class='event__offer-title'>${offer.title}</span>
                   &plus;&euro;&nbsp;
@@ -84,7 +97,7 @@ const createOffersTemplate = (offers, isOffers) => {
             </label>
           </div>`).join('')}
       </div>
-    </section>` : ''}`;
+    </section>` : '' }`;
   }
   return '';
 };
@@ -97,29 +110,32 @@ const createDescriptionTemplate = (city, chosenCity) => `
   </section>
 `;
 
-const createDestinationListTemplate = (citiesList) => citiesList.map((city) => `
+const createDestinationListTemplate = (citiesList) =>
+  citiesList.map(
+    (city) => `
   <option value="${city.name}"></option>
 `);
 
 const createTypeIconTemplate = (type, chosenType) => `
-  <img class="event__type-icon" width="17" height="17" src="img/icons/${chosenType ? chosenType : type}.png" alt="Event type icon">`;
+  <img class="event__type-icon" width="17" height="17" src="img/icons/${ chosenType ? chosenType : type }.png" alt="Event type icon">`;
 
-const createEventEditFormTemplate = ({
-  wayPointsList,
+const createEventFormTemplate = ({
   type,
-  chosenType,
-  citiesList,
+  chosenType = '',
+  citiesList = [],
   fullTimeFrom,
   fullTimeTo,
   price,
   offers,
+  allOffers = [],
   isOffers,
   city,
-  chosenCity,
+  chosenCity = '',
 }) => {
-  const matchedOffers = offers.find((offer) => offer.type === type);
-  const wayPointsTemplate = createWayPointsListTemplate(wayPointsList);
-  const offersTemplate = createOffersTemplate(matchedOffers, isOffers);
+  const matchedOffers = allOffers.find((offer) => offer.type === type);
+
+  const wayPointsTemplate = createWayPointsListTemplate(allOffers);
+  const offersTemplate = createOffersTemplate(offers, matchedOffers, isOffers);
   const citiesTemplate = createDestinationListTemplate(citiesList);
   const typeIcomTemolate = createTypeIconTemplate(type, chosenType);
   const descriptionTemplate = createDescriptionTemplate(city, chosenCity);
@@ -196,7 +212,7 @@ export default class EventEditForm extends SmartView {
   removeElement() {
     super.removeElement();
 
-    if(this._datepicker) {
+    if (this._datepicker) {
       this._datepicker = null;
     }
   }
@@ -208,18 +224,16 @@ export default class EventEditForm extends SmartView {
 
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
-    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
+    this.getElement()
+      .querySelector('.event__reset-btn')
+      .addEventListener('click', this._formDeleteClickHandler);
   }
 
   //* Point - превращаем информацию в состояние
   static parsePointToData(wayPoint) {
-    return Object.assign(
-      {},
-      wayPoint,
-      {
-        isOffers: wayPoint.offers.join('.') !== [].join('.'),
-      },
-    );
+    return Object.assign({}, wayPoint, {
+      isOffers: wayPoint.offers.join('.') !== [].join('.'),
+    });
   }
 
   //* Data - превращаем состояние в информацию
@@ -230,13 +244,13 @@ export default class EventEditForm extends SmartView {
       data.isOffers = false;
     }
 
-    if(!data.chosenType) {
+    if (!data.chosenType) {
       data.chosenType = data.type;
     } else {
       data.type = data.chosenType;
     }
 
-    if(!data.chosenCity) {
+    if (!data.chosenCity) {
       data.chosenCity = data.city;
     } else {
       data.city = data.chosenCity;
@@ -249,7 +263,7 @@ export default class EventEditForm extends SmartView {
   }
 
   getTemplate() {
-    return createEventEditFormTemplate(this._data);
+    return createEventFormTemplate(this._data);
   }
 
   _formSubmitHandler(evt) {
@@ -259,7 +273,9 @@ export default class EventEditForm extends SmartView {
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmitClick = callback;
-    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+    this.getElement()
+      .querySelector('form')
+      .addEventListener('submit', this._formSubmitHandler);
   }
 
   _formCloseHandler(evt) {
@@ -269,7 +285,9 @@ export default class EventEditForm extends SmartView {
 
   setFormCloseHandler(callback) {
     this._callback.formCloseClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formCloseHandler);
+    this.getElement()
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this._formCloseHandler);
   }
 
   restoreHandlers() {
@@ -280,7 +298,9 @@ export default class EventEditForm extends SmartView {
   }
 
   _setInnerHandlers() {
-    Array.from(this.getElement().querySelectorAll('.event__type-label')).forEach((label) => {
+    Array.from(
+      this.getElement().querySelectorAll('.event__type-label'),
+    ).forEach((label) => {
       label.addEventListener('click', this._typeChooseHandler);
     });
     this.getElement()
@@ -291,23 +311,28 @@ export default class EventEditForm extends SmartView {
   _matchDescription(data) {
     //! Если название введенного города не совпадает со списком, то возвращаем сообщение с просьбой выбрать город из списка
     const mathcedDescription = this._data.citiesList.find((foundCity) => foundCity.name === data);
-    return mathcedDescription ? mathcedDescription.description : 'Please select a city from the dropdown list';
+    return mathcedDescription
+      ? mathcedDescription.description
+      : 'Please select a city from the dropdown list';
   }
 
-  _cityInputHandler(evt){
+  _cityInputHandler(evt) {
     evt.preventDefault();
     //! При в воде в инпут, обновляем данные о выбранном городе
-    this.updateData({
-      chosenCity: {
-        description: this._matchDescription(evt.target.value),
-        name: evt.target.value,
-        pictures: this._data.city.pictures,
+    this.updateData(
+      {
+        chosenCity: {
+          description: this._matchDescription(evt.target.value),
+          name: evt.target.value,
+          pictures: this._data.city.pictures,
+        },
       },
-    }, true);
+      true,
+    );
   }
 
   _setDatepicker() {
-    if(this._datepicker) {
+    if (this._datepicker) {
       this._datepicker = null;
     }
     this._datepicker = flatpickr(
@@ -317,6 +342,7 @@ export default class EventEditForm extends SmartView {
         mode: 'range',
         defaultDate: this._fullTimeFrom,
         onChange: this._dateChangeHandler,
+        enableTime: true,
       },
     );
   }

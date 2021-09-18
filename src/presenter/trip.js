@@ -11,7 +11,7 @@ import {
   sortPointsByTime,
   sortPointsByPrice
 } from '../utils/tripPoint';
-import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
+import { SortType, UpdateType, UserAction, FilterType, State as PointPresenterViewState } from '../const.js';
 
 export default class Trip {
   constructor(tripEventsElementContainer, pointsModel, filterModel, api) {
@@ -93,15 +93,34 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._api.updatePoint(update).then((response) => {
+        this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.SAVING);
+        this._api.updatePoint(update)
+          .then((response) => {
           this._pointsModel.updatePoint(updateType, response);
-        });
+          })
+          .catch(() => {
+            this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+          })
         break;
       case UserAction.ADD_POINT:
-        this._pointsModel.addPoint(updateType, update);
+        this._pointNewPresenter.setSaving();
+        this._api.addPoint(update)
+          .then((response) => {
+          this._pointsModel.addPoint(updateType, response);
+          })
+          .catch(() => {
+            this._pointNewPresenter.setAborting();
+          });
         break;
       case UserAction.DELETE_POINT:
-        this._pointsModel.deletePoint(updateType, update);
+        this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.DELETING);
+        this._api.deletePoint(update)
+          .then(() => {
+          this._pointsModel.deletePoint(updateType, update);
+          })
+          .catch(() => {
+            this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+          });
         break;
     }
   }

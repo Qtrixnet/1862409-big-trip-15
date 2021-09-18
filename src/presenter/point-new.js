@@ -1,7 +1,6 @@
 import EventEditFormView from '../view/event-form';
-import {nanoid} from 'nanoid';
-import {remove, render, RenderPosition} from '../utils/render.js';
-import {UserAction, UpdateType} from '../const.js';
+import { remove, render, RenderPosition } from '../utils/render.js';
+import { UserAction, UpdateType } from '../const.js';
 
 export default class PointNew {
   constructor(pointListContainer, changeData) {
@@ -47,13 +46,31 @@ export default class PointNew {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+  setSaving() {
+    this._pointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._pointEditComponent.shake(resetFormState);
+  }
+
   _handleFormSubmit(point) {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,
-      Object.assign({id: nanoid()}, point),
+      point
     );
-    this.destroy();
   }
 
   _handleDeleteClick() {

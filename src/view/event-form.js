@@ -29,29 +29,24 @@ const BLANK_POINT = {
   minifiedTimeTo: dayjs().format('hh:mm'),
   offers: [
     {
-      type: 'flight',
-      offers: [
-        {
-          title: 'Add luggage',
-          price: 30,
-        },
-        {
-          title: 'Switch to comfort class',
-          price: 100,
-        },
-        {
-          title: 'Add meal',
-          price: 15,
-        },
-        {
-          title: 'Choose seats',
-          price: 5,
-        },
-      ],
+      title: 'Add luggage',
+      price: 30,
+    },
+    {
+      title: 'Switch to comfort class',
+      price: 100,
+    },
+    {
+      title: 'Add meal',
+      price: 15,
+    },
+    {
+      title: 'Choose seats',
+      price: 5,
     },
   ],
   allOffers: [],
-  price: '',
+  price: 100,
   tripDate: dayjs(),
   type: 'flight',
   wayPointsList: [
@@ -67,12 +62,12 @@ const BLANK_POINT = {
   ],
 };
 
-const createWayPointsListTemplate = (wayPoints) =>
+const createWayPointsListTemplate = (wayPoints, isDisabled) =>
   wayPoints
     .map(
       (wayPoint) => `
   <div class="event__type-item">
-    <input id="event-type-${wayPoint.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${wayPoint.type}">
+    <input id="event-type-${wayPoint.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" ${isDisabled ? 'disabled' : ''} value="${wayPoint.type}">
     <label class="event__type-label  event__type-label--${wayPoint.type}" for="event-type-${wayPoint.type}-1">${wayPoint.type}</label>
   </div>`)
     .join('');
@@ -83,7 +78,7 @@ const createOffersTemplate = (offers, matchedOffers, isOffers) => {
 
   if ((offers, matchedOffers)) {
     return `
-    ${ isOffers ? `
+    ${isOffers ? `
     <section class="event__section event__section--offers">
       <h3 class="event__section-title event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
@@ -97,7 +92,7 @@ const createOffersTemplate = (offers, matchedOffers, isOffers) => {
             </label>
           </div>`).join('')}
       </div>
-    </section>` : '' }`;
+    </section>` : ''}`;
   }
   return '';
 };
@@ -117,7 +112,7 @@ const createDestinationListTemplate = (citiesList) =>
 `);
 
 const createTypeIconTemplate = (type, chosenType) => `
-  <img class="event__type-icon" width="17" height="17" src="img/icons/${ chosenType ? chosenType : type }.png" alt="Event type icon">`;
+  <img class="event__type-icon" width="17" height="17" src="img/icons/${chosenType ? chosenType : type}.png" alt="Event type icon">`;
 
 const createEventFormTemplate = ({
   type,
@@ -131,10 +126,13 @@ const createEventFormTemplate = ({
   isOffers,
   city,
   chosenCity = '',
+  isDisabled,
+  isSaving,
+  isDeleting
 }) => {
   const matchedOffers = allOffers.find((offer) => offer.type === type);
 
-  const wayPointsTemplate = createWayPointsListTemplate(allOffers);
+  const wayPointsTemplate = createWayPointsListTemplate(allOffers, isDisabled);
   const offersTemplate = createOffersTemplate(offers, matchedOffers, isOffers);
   const citiesTemplate = createDestinationListTemplate(citiesList);
   const typeIcomTemolate = createTypeIconTemplate(type, chosenType);
@@ -160,25 +158,25 @@ const createEventFormTemplate = ({
           <label class="event__label event__type-output" for="event-destination-1">
             ${chosenType ? chosenType : type}
           </label>
-          <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(city.name)}" list="destination-list-1">
+          <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" ${isDisabled ? 'disabled' : ''} value="${he.encode(city.name)}" list="destination-list-1">
           <datalist id='destination-list-1'>${citiesTemplate}</datalist>
         </div>
         <div class="event__field-group event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fullTimeFrom}">
+          <input class="event__input event__input--time" id="event-start-time-1" type="text" ${isDisabled ? 'disabled' : ''} name="event-start-time" value="${fullTimeFrom}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${fullTimeTo}">
+          <input class="event__input event__input--time" id="event-end-time-1" type="text" ${isDisabled ? 'disabled' : ''} name="event-end-time" value="${fullTimeTo}">
         </div>
         <div class="event__field-group event__field-group--price">
           <label class="event__label" for="event-price-1">
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input event__input--price" id="event-price-1" type="text" pattern="^[ 0-9]+$" name="event-price" value="${he.encode(`${price}`)}">
+          <input class="event__input event__input--price" id="event-price-1" type="text" pattern="^[ 0-9]+$" name="event-price" ${isDisabled ? 'disabled' : ''} value="${he.encode(`${price}`)}">
         </div>
-        <button class="event__save-btn btn btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+        <button class="event__save-btn btn btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
+        <button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
@@ -233,6 +231,9 @@ export default class EventEditForm extends SmartView {
   static parsePointToData(wayPoint) {
     return Object.assign({}, wayPoint, {
       isOffers: wayPoint.offers.join('.') !== [].join('.'),
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     });
   }
 
@@ -259,6 +260,9 @@ export default class EventEditForm extends SmartView {
     delete data.chosenCity;
     delete data.chosenType;
     delete data.isOffers;
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
     return data;
   }
 
@@ -279,6 +283,7 @@ export default class EventEditForm extends SmartView {
   }
 
   _formCloseHandler(evt) {
+    console.log(this._data)
     evt.preventDefault();
     this._callback.formCloseClick(this._data);
   }

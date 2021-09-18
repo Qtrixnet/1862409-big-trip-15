@@ -69,7 +69,7 @@ export default class PointNew {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,
-      point
+      point,
     );
   }
 

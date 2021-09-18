@@ -128,7 +128,7 @@ const createEventFormTemplate = ({
   chosenCity = '',
   isDisabled,
   isSaving,
-  isDeleting
+  isDeleting,
 }) => {
   const matchedOffers = allOffers.find((offer) => offer.type === type);
 
@@ -283,7 +283,6 @@ export default class EventEditForm extends SmartView {
   }
 
   _formCloseHandler(evt) {
-    console.log(this._data)
     evt.preventDefault();
     this._callback.formCloseClick(this._data);
   }

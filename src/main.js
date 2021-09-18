@@ -44,8 +44,6 @@ const mainPageElement = document.querySelector('.page-body__page-main'),
 
 const pageBodyContainerElement = document.querySelector('.page-body__stats-container');
 
-// render(pageBodyContainerElement, new StatsView().getElement(), RenderPosition.AFTERBEGIN);
-
 const handlePointNewFormClose = () => {
   newEventButtonComponent.getElement().disabled = false;
   newEventButtonComponent.setMenuItemToAddEvent();

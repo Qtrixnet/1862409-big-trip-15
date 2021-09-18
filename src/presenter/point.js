@@ -1,7 +1,7 @@
 import TripEventsItemView from '../view/trip-events-item';
 import EventEditFormView from '../view/event-form';
 import { render, RenderPosition, replace, remove } from '../utils/render';
-import { UserAction, UpdateType } from '../const';
+import { UserAction, UpdateType, State } from '../const';
 import { Mode } from '../const';
 
 export default class Point {
@@ -36,7 +36,7 @@ export default class Point {
     this._eventItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditFormComponent.setDeleteClickHandler(this._handleDeleteClick);
 
-    if(prevEventItemComponent === null || this._eventEditFormComponent === null) {
+    if (prevEventItemComponent === null || this._eventEditFormComponent === null) {
       render(this._wayPointsListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -46,14 +46,15 @@ export default class Point {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._eventEditFormComponent, prevEventEditFormComponent);
+      replace(this._eventItemComponent, prevEventEditFormComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevEventItemComponent);
     remove(prevEventEditFormComponent);
   }
 
-  destroy(){
+  destroy() {
     remove(this._eventItemComponent);
     remove(this._eventEditFormComponent);
   }
@@ -61,6 +62,39 @@ export default class Point {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToItem();
+    }
+  }
+
+  setViewState(state) {
+    if (this._mode === Mode.DEFAULT) {
+      return;
+    }
+
+    const resetFormState = () => {
+      this._eventEditFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._eventEditFormComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._eventEditFormComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._eventItemComponent.shake(resetFormState);
+        this._eventEditFormComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -104,7 +138,6 @@ export default class Point {
   }
 
   _handleFormSubmit(update) {
-    // isMajorUpdate
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MAJOR,

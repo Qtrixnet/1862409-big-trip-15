@@ -41,11 +41,11 @@ export const getDestinationListMarkup = (citiesList) => {
   return  `<datalist id='destination-list-1'>${destinationMarkup}</datalist>`;
 };
 
-export const sortPointsByDay = (taskA, taskB) => dayjs(taskA.tripDate).diff(dayjs(taskB.tripDate));
+export const sortPointsByDay = (pointA, pointB) => dayjs(pointB.fullTimeFrom).diff(dayjs(pointA.fullTimeFrom));
 
-export const sortPointsByTime = (taskA, taskB) => dayjs(taskB.duration).diff(dayjs(taskA.duration));
+export const sortPointsByTime = (pointA, pointB) => dayjs(pointB.duration).diff(dayjs(pointA.duration));
 
-export const sortPointsByPrice = (taskA, taskB) => dayjs(taskB.price).diff(dayjs(taskA.price));
+export const sortPointsByPrice = (pointA, pointB) => dayjs(pointB.price).diff(dayjs(pointA.price));
 
 export const isDateFuture = (date) => dayjs().isBefore(date);
 

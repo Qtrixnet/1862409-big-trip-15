@@ -33,5 +33,3 @@ export const MenuItem = {
   TABLE: 'TABLE',
   STATS: 'STATS',
 };
-
-

@@ -2,8 +2,8 @@ import AbstractView from './abstract';
 
 const createNavigationTemplate = () =>
   `<nav class="trip-controls__trip-tabs trip-tabs">
-    <a id="TABLE" class="trip-tabs__btn trip-tabs__btn--active" href="#">Table</a>
-    <a id="STATS" class="trip-tabs__btn" href="#">Stats</a>
+    <a id="TABLE" class="trip-tabs__btn " href="#">Table</a>
+    <a id="STATS" class="trip-tabs__btn " href="#">Stats</a>
   </nav>`;
 
 export default class SiteMenu extends AbstractView {

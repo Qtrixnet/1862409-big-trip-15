@@ -2,6 +2,7 @@ import SiteMenuView from './view/site-menu';
 import TripCostView from './view/trip-cost';
 import TripInfoView from './view/trip-info';
 import AddNewEventView from './view/new-event-button';
+import StatsView from './view/stats';
 
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
@@ -9,11 +10,11 @@ import FilterPresenter from './presenter/filter';
 import PointsModel from './model/points';
 import FilterModel from './model/filter.js';
 
-import { render, RenderPosition } from './utils/render';
+import { remove, render, RenderPosition } from './utils/render';
 import { MenuItem, UpdateType, FilterType } from './const.js';
 import Api from './api.js';
 
-const AUTHORIZATION = 'Basic 2s32334u43s3gfhyur';
+const AUTHORIZATION = 'Basic 2s323234u43s3gfhyur';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
 const api = new Api(END_POINT, AUTHORIZATION);
@@ -41,6 +42,10 @@ const filtersElement = tripMainElement.querySelector('.trip-controls__filters');
 const mainPageElement = document.querySelector('.page-body__page-main'),
   tripEventsElement = mainPageElement.querySelector('.trip-events');
 
+const pageBodyContainerElement = document.querySelector('.page-body__stats-container');
+
+// render(pageBodyContainerElement, new StatsView().getElement(), RenderPosition.AFTERBEGIN);
+
 const handlePointNewFormClose = () => {
   newEventButtonComponent.getElement().disabled = false;
   newEventButtonComponent.setMenuItemToAddEvent();
@@ -59,6 +64,7 @@ const tripPresenter = new TripPresenter(
   api,
 );
 tripPresenter.init();
+let statisticsComponent = null;
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -70,8 +76,17 @@ const handleSiteMenuClick = (menuItem) => {
       newEventButtonComponent.getElement().disabled = true;
       break;
     case MenuItem.TABLE:
+      tripPresenter.init();
+      remove(statisticsComponent);
+      newEventButtonComponent.getElement().disabled = false;
       break;
     case MenuItem.STATS:
+      tripPresenter.destroy();
+      statisticsComponent ? remove(statisticsComponent) : '';
+      statisticsComponent = new StatsView(pointsModel.getPoints());
+      render(pageBodyContainerElement, statisticsComponent, RenderPosition.AFTERBEGIN);
+      newEventButtonComponent.getElement().disabled = true;
+
       break;
   }
 };
@@ -79,14 +94,10 @@ const handleSiteMenuClick = (menuItem) => {
 Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
   .then((points) => {
     const newPoints = points[0].map((point) => {
-      const adaptedPoint = Object.assign(
-        {},
-        point,
-        {
-          citiesList: points[1],
-          allOffers: points[2],
-        },
-      );
+      const adaptedPoint = Object.assign({}, point, {
+        citiesList: points[1],
+        allOffers: points[2],
+      });
       return adaptedPoint;
     });
 

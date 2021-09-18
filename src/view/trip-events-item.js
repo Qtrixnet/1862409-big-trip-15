@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 import he from 'he';
+import { durationFormat } from '../utils';
 
 const createEventsItemTemplate = ({
   offers,
@@ -31,20 +32,6 @@ const createEventsItemTemplate = ({
     : 'event__favorite-btn';
 
   const offersMarkupTemplate = createOffersMarkupTemplate(offers);
-
-  const durationFormat = (durationValue) => {
-    const days = Math.floor(durationValue / (1000 * 60 * 60 * 24) % 30),
-      hours = Math.floor((durationValue / (1000 * 60 * 60)) % 24),
-      minutes = Math.floor((durationValue / (1000 * 60)) % 60);
-
-    if (days !== 0) {
-      return `${days}D ${hours}H ${minutes}M`;
-    } else if (days === 0 && hours !== 0) {
-      return `${hours}H ${minutes}M`;
-    } else {
-      return `${minutes}M`;
-    }
-  };
 
   const formattedDuration = durationFormat(duration);
 

@@ -72,3 +72,17 @@ export const getDestinationListMarkup = (citiesList) => {
 
   return  `<datalist id='destination-list-1'>${destinationMarkup}</datalist>`;
 };
+
+export const durationFormat = (durationValue) => {
+  const days = Math.floor(durationValue / (1000 * 60 * 60 * 24) % 30),
+    hours = Math.floor((durationValue / (1000 * 60 * 60)) % 24),
+    minutes = Math.floor((durationValue / (1000 * 60)) % 60);
+
+  if (days !== 0) {
+    return `${days}D ${hours}H ${minutes}M`;
+  } else if (days === 0 && hours !== 0) {
+    return `${hours}H ${minutes}M`;
+  } else {
+    return `${minutes}M`;
+  }
+};

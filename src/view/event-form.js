@@ -107,8 +107,8 @@ const createOffersTemplate = (offers, matchedOffers, isOffers) => {
 };
 
 //! Передаем изначальный город и выбранный город
-const createDescriptionTemplate = (city, chosenCity) => `
-  <section class="event__section event__section--destination">
+const createDescriptionTemplate = (city, chosenCity) =>
+  `<section class="event__section event__section--destination">
     <h3 class="event__section-title event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${chosenCity ? chosenCity.description : city.description}</p>
 
@@ -146,7 +146,6 @@ const createEventFormTemplate = ({
   isDeleting,
   isNew,
 }) => {
-
   const matchedOffers = allOffers.find((offer) => offer.type === type);
 
   const wayPointsTemplate = createWayPointsListTemplate(allOffers, isDisabled);

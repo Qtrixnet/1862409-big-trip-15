@@ -102,6 +102,7 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.minifiedTimeTo;
     delete adaptedPoint.isFavorite;
     delete adaptedPoint.price;
+    delete adaptedPoint.isNew;
 
     return adaptedPoint;
   }

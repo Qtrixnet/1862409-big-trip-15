@@ -60,6 +60,7 @@ const BLANK_POINT = {
     'sightseeing',
     'restaurant',
   ],
+  isNew: true,
 };
 
 const createWayPointsListTemplate = (wayPoints, isDisabled) =>
@@ -129,6 +130,7 @@ const createEventFormTemplate = ({
   isDisabled,
   isSaving,
   isDeleting,
+  isNew,
 }) => {
   const matchedOffers = allOffers.find((offer) => offer.type === type);
 
@@ -176,7 +178,7 @@ const createEventFormTemplate = ({
           <input class="event__input event__input--price" id="event-price-1" type="text" pattern="^[ 0-9]+$" name="event-price" ${isDisabled ? 'disabled' : ''} value="${he.encode(`${price}`)}">
         </div>
         <button class="event__save-btn btn btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
-        <button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>
+        ${isNew ? '<button class="event__reset-btn" type="reset">Cancel</button>' : `<button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>`}
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>

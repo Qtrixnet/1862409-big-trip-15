@@ -9,9 +9,7 @@ const createTripInfoTemplate = (points) => {
     const handleCities = (citiesList) => {
       if (citiesList) {
         //* Форматируем список городов, если их больше 2х
-        return `${citiesList[0]} ${citiesList.length > 2 ? '- ... -' : '-'} ${
-          citiesList[citiesList.length - 1]
-        }`;
+        return `${citiesList[0]} ${citiesList.length > 2 ? '- ... -' : '-'} ${citiesList[citiesList.length - 1]}`;
       }
     };
 

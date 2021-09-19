@@ -17,6 +17,14 @@ const BLANK_POINT = {
         src: 'http://picsum.photos/248/152?r=1',
         description: 'Geneva parliament building',
       },
+      {
+        src: 'http://picsum.photos/248/152?r=2',
+        description: 'Geneva is a city in Switzerland',
+      },
+      {
+        src: 'http://picsum.photos/248/152?r=3',
+        description: 'city has views of dramatic Mont Blanc',
+      },
     ],
   },
   duration: 0,
@@ -60,6 +68,7 @@ const BLANK_POINT = {
     'sightseeing',
     'restaurant',
   ],
+  isNew: true,
 };
 
 const createWayPointsListTemplate = (wayPoints, isDisabled) =>
@@ -98,10 +107,16 @@ const createOffersTemplate = (offers, matchedOffers, isOffers) => {
 };
 
 //! Передаем изначальный город и выбранный город
-const createDescriptionTemplate = (city, chosenCity) => `
-  <section class="event__section event__section--destination">
+const createDescriptionTemplate = (city, chosenCity) =>
+  `<section class="event__section event__section--destination">
     <h3 class="event__section-title event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${chosenCity ? chosenCity.description : city.description}</p>
+
+    <div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${city.pictures ? city.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`) : ''}
+    </div>
+  </div>
   </section>
 `;
 
@@ -129,6 +144,7 @@ const createEventFormTemplate = ({
   isDisabled,
   isSaving,
   isDeleting,
+  isNew,
 }) => {
   const matchedOffers = allOffers.find((offer) => offer.type === type);
 
@@ -176,7 +192,7 @@ const createEventFormTemplate = ({
           <input class="event__input event__input--price" id="event-price-1" type="text" pattern="^[ 0-9]+$" name="event-price" ${isDisabled ? 'disabled' : ''} value="${he.encode(`${price}`)}">
         </div>
         <button class="event__save-btn btn btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
-        <button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>
+        ${isNew ? '<button class="event__reset-btn" type="reset">Cancel</button>' : `<button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>`}
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>

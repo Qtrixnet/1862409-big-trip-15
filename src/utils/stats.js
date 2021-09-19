@@ -37,8 +37,8 @@ export const countsTime = (points, types) => {
   return timeSpendCount;
 };
 
-export const uniqTypes = (points) => {
-  const unique = (arr) => {
+export const findUniqTypes = (points) => {
+  const uniqueType = (arr) => {
     const result = [];
     for (const str of arr) {
       if (!result.includes(str)) {
@@ -48,5 +48,5 @@ export const uniqTypes = (points) => {
     return result;
   };
   const allTypes = points.map((point) => point.type.toUpperCase());
-  return unique(allTypes).sort();
+  return uniqueType(allTypes).sort();
 };

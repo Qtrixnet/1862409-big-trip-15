@@ -1,11 +1,11 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AbstractView from './abstract';
-import { countMoney, uniqTypes, countsTypes, countsTime } from '../utils/stats';
+import { countMoney, findUniqTypes, countsTypes, countsTime } from '../utils/stats';
 import { durationFormat } from '../utils';
 
 const renderMoneyChart = (moneyCtx, points) => {
-  const types = uniqTypes(points);
+  const types = findUniqTypes(points);
   const money = countMoney(points, types);
 
   return new Chart(moneyCtx, {
@@ -75,7 +75,7 @@ const renderMoneyChart = (moneyCtx, points) => {
 };
 
 const renderTypeChart = (typeCtx, points) => {
-  const types = uniqTypes(points);
+  const types = findUniqTypes(points);
   const countTypes = countsTypes(points, types);
 
   return new Chart(typeCtx, {
@@ -145,7 +145,7 @@ const renderTypeChart = (typeCtx, points) => {
 };
 
 const renderTimeChart = (timeCtx, points) => {
-  const types = uniqTypes(points);
+  const types = findUniqTypes(points);
   const countTime = countsTime(points, types);
 
   return new Chart(timeCtx, {

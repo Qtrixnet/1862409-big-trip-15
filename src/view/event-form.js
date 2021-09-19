@@ -17,6 +17,14 @@ const BLANK_POINT = {
         src: 'http://picsum.photos/248/152?r=1',
         description: 'Geneva parliament building',
       },
+      {
+        src: 'http://picsum.photos/248/152?r=2',
+        description: 'Geneva is a city in Switzerland',
+      },
+      {
+        src: 'http://picsum.photos/248/152?r=3',
+        description: 'city has views of dramatic Mont Blanc',
+      },
     ],
   },
   duration: 0,
@@ -103,6 +111,12 @@ const createDescriptionTemplate = (city, chosenCity) => `
   <section class="event__section event__section--destination">
     <h3 class="event__section-title event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${chosenCity ? chosenCity.description : city.description}</p>
+
+    <div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${city.pictures ? city.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`) : ''}
+    </div>
+  </div>
   </section>
 `;
 
@@ -132,6 +146,7 @@ const createEventFormTemplate = ({
   isDeleting,
   isNew,
 }) => {
+
   const matchedOffers = allOffers.find((offer) => offer.type === type);
 
   const wayPointsTemplate = createWayPointsListTemplate(allOffers, isDisabled);

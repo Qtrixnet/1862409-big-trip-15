@@ -15,7 +15,7 @@ const createEventsItemTemplate = ({
 }) => {
 
   const createOffersMarkupTemplate = (tripOffers) => {
-    if(tripOffers.length !== 0) {
+    if (tripOffers.length !== 0) {
       return tripOffers.map((offer) => `
           <li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>

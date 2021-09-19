@@ -32,13 +32,13 @@ export const getWayPointsListMarkup = (wayPointsList) => {
 
 export const getDestinationListMarkup = (citiesList) => {
   //* Разметка списка городов
-  let  destinationMarkup = '';
+  let destinationMarkup = '';
   for (const cityOption of citiesList) {
     destinationMarkup += `
       <option value="${cityOption}"></option>`;
   }
 
-  return  `<datalist id='destination-list-1'>${destinationMarkup}</datalist>`;
+  return `<datalist id='destination-list-1'>${destinationMarkup}</datalist>`;
 };
 
 export const sortPointsByDay = (pointA, pointB) => dayjs(pointB.fullTimeFrom).diff(dayjs(pointA.fullTimeFrom));

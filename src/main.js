@@ -106,6 +106,7 @@ Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
       new TripInfoView(newPoints).getElement(),
       RenderPosition.AFTERBEGIN,
     );
+
     const tripInfoElement = tripMainElement.querySelector(
       '.trip-main__trip-info',
     );

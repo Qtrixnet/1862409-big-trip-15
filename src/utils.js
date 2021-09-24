@@ -1,7 +1,4 @@
-export const RenderPosition = {
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-};
+import dayjs from "dayjs";
 
 //* Функция рендера блоков
 export const render = (container, element, place) => {

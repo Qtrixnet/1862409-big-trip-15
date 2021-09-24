@@ -28,46 +28,21 @@ const BLANK_POINT = {
     ],
   },
   duration: 0,
-  eventCities: [],
   fullTimeFrom: dayjs(),
   fullTimeTo: dayjs(),
   id: '',
   isFavorite: false,
+  isDeleting: false,
+  isDisabled: false,
+  isFavorite: false,
+  isOffers: true,
+  isSaving: false,
   minifiedTimeFrom: dayjs().format('hh:mm'),
   minifiedTimeTo: dayjs().format('hh:mm'),
-  offers: [
-    {
-      title: 'Add luggage',
-      price: 30,
-    },
-    {
-      title: 'Switch to comfort class',
-      price: 100,
-    },
-    {
-      title: 'Add meal',
-      price: 15,
-    },
-    {
-      title: 'Choose seats',
-      price: 5,
-    },
-  ],
+  offers: [],
   allOffers: [],
-  price: 100,
-  tripDate: dayjs(),
+  price: 0,
   type: 'flight',
-  wayPointsList: [
-    'taxi',
-    'bus',
-    'train',
-    'ship',
-    'drive',
-    'flight',
-    'check-in',
-    'sightseeing',
-    'restaurant',
-  ],
   isNew: true,
 };
 
@@ -209,10 +184,11 @@ export default class EventEditForm extends SmartView {
   constructor(wayPoint = BLANK_POINT) {
     super();
     //* На вход получили информацию и далее работаем с состоянием
+    console.log(wayPoint)
     this._data = EventEditForm.parsePointToData(wayPoint);
     this._datepicker = null;
-
     this._wayPoint = wayPoint;
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);

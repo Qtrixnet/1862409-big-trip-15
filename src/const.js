@@ -38,3 +38,8 @@ export const MenuItem = {
   TABLE: 'TABLE',
   STATS: 'STATS',
 };
+
+export const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+};

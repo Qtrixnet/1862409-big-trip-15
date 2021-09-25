@@ -31,9 +31,9 @@ export default class Point {
     this._eventEditFormComponent = new EventEditFormView(wayPoint);
 
     this._eventItemComponent.setEditClickHandler(this._handleEditClick);
+    this._eventItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditFormComponent.setFormCloseHandler(this._handleFormSubmit);
-    this._eventItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditFormComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevEventItemComponent === null || this._eventEditFormComponent === null) {

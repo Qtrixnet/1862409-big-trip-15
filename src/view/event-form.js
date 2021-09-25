@@ -184,7 +184,6 @@ export default class EventEditForm extends SmartView {
   constructor(wayPoint = BLANK_POINT) {
     super();
     //* На вход получили информацию и далее работаем с состоянием
-    console.log(wayPoint)
     this._data = EventEditForm.parsePointToData(wayPoint);
     this._datepicker = null;
     this._wayPoint = wayPoint;

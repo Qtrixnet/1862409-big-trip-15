@@ -38,7 +38,7 @@ export default class Sort extends AbstractView {
   }
 
   _sortTypeChangeHandler(evt) {
-    if (evt.target.tagName !== 'LABEL') {
+    if (evt.target.tagName !== 'LABEL' || !evt.target.dataset.sortType) {
       return;
     }
 
@@ -48,6 +48,7 @@ export default class Sort extends AbstractView {
 
   setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
+    console.log(callback)
     this.getElement().addEventListener('click', this._sortTypeChangeHandler);
   }
 }

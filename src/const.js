@@ -1,3 +1,6 @@
+export const escapeKey = 'Escape';
+export const escKey = 'Esc'
+
 export const SortType = {
   DEFAULT: 'DEFAULT',
   TIME: 'TIME',

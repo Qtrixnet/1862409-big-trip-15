@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 //* Функция рендера блоков
 export const render = (container, element, place) => {
   if (container) {
@@ -71,15 +69,21 @@ export const getDestinationListMarkup = (citiesList) => {
 };
 
 export const durationFormat = (durationValue) => {
-  const days = Math.floor(durationValue / (1000 * 60 * 60 * 24) % 30),
-    hours = Math.floor((durationValue / (1000 * 60 * 60)) % 24),
-    minutes = Math.floor((durationValue / (1000 * 60)) % 60);
+  const daysPerMonth = 30;
+  const hoursPerDay = 24;
+  const minutesPerHour = 60;
+  const secondsPerMinute = 60;
+  const millisecondsPerSecond = 1000;
+
+  const days = Math.floor(durationValue / (millisecondsPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay) % daysPerMonth),
+    hours = Math.floor((durationValue / (millisecondsPerSecond * secondsPerMinute * minutesPerHour)) % hoursPerDay),
+    minutes = Math.floor((durationValue / (millisecondsPerSecond * secondsPerMinute)) % minutesPerHour);
 
   if (days !== 0) {
     return `${days}D ${hours}H ${minutes}M`;
   } else if (days === 0 && hours !== 0) {
     return `${hours}H ${minutes}M`;
-  } else {
-    return `${minutes}M`;
   }
+
+  return `${minutes}M`;
 };

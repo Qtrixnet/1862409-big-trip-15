@@ -10,13 +10,13 @@ export default class TripCost extends AbstractView {
     this._wayPoints = wayPoints;
   }
 
+  getTemplate() {
+    return createTripCostTemplate(this._getTotalCost(this._wayPoints));
+  }
+
   _getTotalCost(points) {
     let total = 0;
     points.map((point) => (total += point.price));
     return total;
-  }
-
-  getTemplate() {
-    return createTripCostTemplate(this._getTotalCost(this._wayPoints));
   }
 }

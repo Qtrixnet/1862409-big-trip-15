@@ -193,6 +193,7 @@ export default class EventEditForm extends SmartView {
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._typeChooseHandler = this._typeChooseHandler.bind(this);
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
@@ -301,6 +302,9 @@ export default class EventEditForm extends SmartView {
     this.getElement()
       .querySelector('.event__input--destination')
       .addEventListener('input', this._cityInputHandler);
+    this.getElement()
+      .querySelector('.event__input--price')
+      .addEventListener('input', this._priceChangeHandler);
   }
 
   _matchDescription(data) {
@@ -340,6 +344,12 @@ export default class EventEditForm extends SmartView {
         enableTime: true,
       },
     );
+  }
+
+  _priceChangeHandler(evt) {
+    this.updateData({
+      price: +evt.target.value
+    }, true);
   }
 
   _typeChooseHandler(evt) {

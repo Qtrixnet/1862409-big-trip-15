@@ -34,7 +34,6 @@ const BLANK_POINT = {
   isFavorite: false,
   isDeleting: false,
   isDisabled: false,
-  isFavorite: false,
   isOffers: true,
   isSaving: false,
   minifiedTimeFrom: dayjs().format('hh:mm'),
@@ -46,15 +45,14 @@ const BLANK_POINT = {
   isNew: true,
 };
 
-const createWayPointsListTemplate = (wayPoints, isDisabled) =>
-  wayPoints
-    .map(
-      (wayPoint) => `
+const createWayPointsListTemplate = (wayPoints, isDisabled) => wayPoints
+  .map(
+    (wayPoint) => `
   <div class="event__type-item">
-    <input id="event-type-${wayPoint.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" ${isDisabled ? 'disabled' : ''} value="${wayPoint.type}">
-    <label class="event__type-label  event__type-label--${wayPoint.type}" for="event-type-${wayPoint.type}-1">${wayPoint.type}</label>
+    <input id="event-type-${wayPoint}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" ${isDisabled ? 'disabled' : ''} value="${wayPoint}">
+    <label class="event__type-label  event__type-label--${wayPoint}" for="event-type-${wayPoint}-1">${wayPoint}</label>
   </div>`)
-    .join('');
+  .join('');
 
 const createOffersTemplate = (offers, matchedOffers, isOffers) => {
   const checkOffer = (matchedOffer) =>
@@ -120,10 +118,11 @@ const createEventFormTemplate = ({
   isSaving,
   isDeleting,
   isNew,
+  allTypes = [],
 }) => {
   const matchedOffers = allOffers.find((offer) => offer.type === type);
 
-  const wayPointsTemplate = createWayPointsListTemplate(allOffers, isDisabled);
+  const wayPointsTemplate = createWayPointsListTemplate(allTypes, isDisabled);
   const offersTemplate = createOffersTemplate(offers, matchedOffers, isOffers);
   const citiesTemplate = createDestinationListTemplate(citiesList);
   const typeIcomTemolate = createTypeIconTemplate(type, chosenType);
@@ -147,7 +146,7 @@ const createEventFormTemplate = ({
         </div>
         <div class="event__field-group event__field-group--destination">
           <label class="event__label event__type-output" for="event-destination-1">
-            ${chosenType ? chosenType : type}
+            ${chosenType}
           </label>
           <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" ${isDisabled ? 'disabled' : ''} value="${he.encode(city.name)}" list="destination-list-1">
           <datalist id='destination-list-1'>${citiesTemplate}</datalist>
@@ -348,7 +347,7 @@ export default class EventEditForm extends SmartView {
 
   _priceChangeHandler(evt) {
     this.updateData({
-      price: +evt.target.value
+      price: +evt.target.value,
     }, true);
   }
 

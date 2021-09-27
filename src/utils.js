@@ -1,3 +1,5 @@
+import { RenderPosition } from './utils/render';
+
 //* Функция рендера блоков
 export const render = (container, element, place) => {
   if (container) {

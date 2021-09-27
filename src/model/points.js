@@ -54,7 +54,6 @@ export default class Points extends AbstractObserver {
   }
 
   static adaptToClient(point) {
-
     const adaptedPoint = Object.assign(
       {},
       point,
@@ -103,6 +102,7 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.isFavorite;
     delete adaptedPoint.price;
     delete adaptedPoint.isNew;
+    delete adaptedPoint.allTypes;
 
     return adaptedPoint;
   }

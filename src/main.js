@@ -14,7 +14,7 @@ import { remove, render, RenderPosition } from './utils/render';
 import { MenuItem, UpdateType, FilterType } from './const.js';
 import Api from './api.js';
 
-const AUTHORIZATION = 'Basic 2s323234u43s3gfhyur';
+const AUTHORIZATION = 'Basic 2s3234u43s3gfhyur';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
 const api = new Api(END_POINT, AUTHORIZATION);
@@ -91,10 +91,12 @@ const handleSiteMenuClick = (menuItem) => {
 
 Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
   .then((points) => {
+    const allTypes = points[2].map((point) => point.type);
     const newPoints = points[0].map((point) => {
       const adaptedPoint = Object.assign({}, point, {
         citiesList: points[1],
         allOffers: points[2],
+        allTypes: allTypes,
       });
       return adaptedPoint;
     });

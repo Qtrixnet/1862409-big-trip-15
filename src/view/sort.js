@@ -38,7 +38,7 @@ export default class Sort extends AbstractView {
   }
 
   _sortTypeChangeHandler(evt) {
-    if (evt.target.tagName !== 'LABEL') {
+    if (evt.target.tagName !== 'LABEL' || !evt.target.dataset.sortType) {
       return;
     }
 

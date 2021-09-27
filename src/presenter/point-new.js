@@ -1,6 +1,6 @@
 import EventEditFormView from '../view/event-form';
 import { remove, render, RenderPosition } from '../utils/render.js';
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType, escapeKey, escKey } from '../const.js';
 
 export default class PointNew {
   constructor(pointListContainer, changeData) {
@@ -78,7 +78,7 @@ export default class PointNew {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === escapeKey || evt.key === escKey) {
       evt.preventDefault();
       this.destroy();
     }
